@@ -1,0 +1,34 @@
+# CSV Data Cleaning Rules
+# Each line represents a cleaning rule that will be applied by the LLM
+# Lines starting with # are comments and will be ignored
+# Empty lines are also ignored
+
+# Name formatting rules
+Names should be properly capitalized (first letter uppercase, rest lowercase)
+Remove any titles or prefixes from names (Mr., Mrs., Dr., etc.)
+
+# Email validation rules
+Email addresses must be valid format with @ symbol and proper domain
+Remove obviously fake email addresses like test@test.com or admin@example.com
+Standardize email domains to lowercase
+
+# Phone number formatting rules
+Phone numbers should be normalized to (XXX) XXX-XXXX format
+Remove any extensions or additional digits from phone numbers
+Ensure phone numbers are valid US format
+
+# Address standardization rules
+Standardize address formats for consistency
+States must be valid US state abbreviations (2 letters)
+Cities must be consistent with the provided state
+Remove apartment/suite numbers if inconsistent
+
+# Data quality rules
+Remove any obviously invalid or test data
+Ensure geographical data relationships are correct (city matches state)
+Flag and remove duplicate records
+Remove records with too many missing fields
+
+# Business rules
+Companies should have proper capitalization
+Remove test companies or obviously fake business names
