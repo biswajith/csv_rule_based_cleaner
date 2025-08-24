@@ -203,7 +203,7 @@ class LLMClient:
                 user_rules=formatted_rules,
                 column_headers=formatted_columns
             )
-            system_prompt = "You are a data cleaning expert. Expand user rules into comprehensive cleaning instructions. Use column headers to help you understand the data. But don't generate rules for columns that don't have any rules associated with them. Explicity add instructions to never delete or drop any record even if the record has invalid data in critical fields. Pay keen attention to any column that may have geographic data and ensure that the geographic data is valid. Not just the individual geographic field, but group together. For example if the record has city, state and zip code make sure that the combination is valid, not just the individual fields. If a record has Portland as city and WA as the state, the record has to be corrected to have OR as the state. Zip code has to match the city, if record has 26505 for City Portland, then it should get converted to Morgantown and state to WV."
+            system_prompt = "You are a data cleaning expert. Expand user rules into comprehensive cleaning instructions. Use column headers to help you understand the data. But don't generate rules for columns that don't have any rules associated with them. Explicity add instructions to never delete or drop any record even if the record has invalid data in critical fields. Pay keen attention to any column that may have geographic data and ensure that the geographic data is valid. Not just the individual geographic field, but group together."
 
             full_prompt = f"{system_prompt}\n{human_prompt}"
             
@@ -347,6 +347,17 @@ class LLMClient:
             
             # Extract content from the response
             response = llm_response.content if hasattr(llm_response, 'content') else str(llm_response)
+            
+            # Enhanced debugging for empty responses
+            if not response or response.strip() == "":
+                logger.error(f"LLM returned empty response! Response object: {llm_response}")
+                logger.error(f"Response type: {type(llm_response)}")
+                logger.error(f"Response attributes: {dir(llm_response)}")
+                return {
+                    "status": "error",
+                    "error": "LLM returned empty response",
+                    "response_debug": str(llm_response)
+                }
             
             # Log the raw response for debugging
             logger.debug(f"Raw LLM response: {response[:500]}..." if len(response) > 500 else f"Raw LLM response: {response}")
