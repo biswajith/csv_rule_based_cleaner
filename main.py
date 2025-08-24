@@ -69,31 +69,12 @@ async def main():
         
         example_file = csv_file
         
-        # Preview the cleaning
-        logger.info("Previewing cleaning results...")
-        preview_results = await processor.preview_file(
-            example_file, 
-            rules_source, 
-            preview_rows=5
-        )
-        
-        if preview_results.get("status") == "success":
-            logger.info("Preview completed successfully")
-            print("\n" + "="*50)
-            print("PREVIEW RESULTS")
-            print("="*50)
-            print(f"File: {example_file}")
-            rules_count = len(rules_source) if isinstance(rules_source, list) else "from file"
-            print(f"Rules applied: {rules_count}")
-            print(f"Sample rows analyzed: {len(preview_results.get('preview_data', {}).get('sample_data', []))}")
-            print("="*50)
-        else:
-            logger.error(f"Preview failed: {preview_results.get('error')}")
-            return
-        
-        # Ask user if they want to proceed with full cleaning
+        # Ask user if they want to proceed with cleaning (only in interactive mode)
         if len(sys.argv) <= 1:  # Only ask in interactive mode
-            proceed = input("\nProceed with full file cleaning? (y/n): ").lower().strip()
+            print(f"\nReady to clean CSV file: {example_file}")
+            rules_count = len(rules_source) if isinstance(rules_source, list) else "from file"
+            print(f"Rules to apply: {rules_count}")
+            proceed = input("\nProceed with CSV cleaning? (y/n): ").lower().strip()
             if proceed != 'y':
                 logger.info("Cleaning cancelled by user")
                 return

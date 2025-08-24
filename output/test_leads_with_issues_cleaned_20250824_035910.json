@@ -1,10 +1,23 @@
 {
   "session_info": {
-    "session_id": "20250824_031855",
-    "generated_at": "2025-08-24T03:19:54.571468",
+    "session_id": "20250824_035821",
+    "generated_at": "2025-08-24T03:59:10.480031",
     "input_file": "test_leads_with_issues.csv",
     "success_rate": 1.0,
-    "total_changes_made": 93
+    "total_changes_made": 103,
+    "total_records": 50,
+    "original_columns": [
+      "first_name",
+      "last_name",
+      "email",
+      "phone",
+      "company",
+      "address",
+      "city",
+      "state",
+      "zip_code",
+      "job_title"
+    ]
   },
   "cleaned_data": [
     {
@@ -15,19 +28,33 @@
       "company": "Tech Corp",
       "address": "123 Main St",
       "city": "Miami",
-      "state": "CA",
+      "state": "FL",
       "zip_code": "90210",
       "job_title": "Software Engineer",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "john.smith@invalid"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 2,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-1234"
+          "issue": "Phone number too short or invalid",
+          "correction": "Formatted to (XXX) XXX-XXXX with digits only",
+          "row_number": 2,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "state",
+          "issue": "Incorrect state for Miami",
+          "correction": "State corrected from CA to FL",
+          "row_number": 2,
+          "column_number": 8,
+          "column_name": "state"
         }
       ]
     },
@@ -39,14 +66,33 @@
       "company": "Data Inc",
       "address": "456 Oak Ave",
       "city": "Austin",
-      "state": "NY",
+      "state": "TX",
       "zip_code": "73301",
       "job_title": "Data Analyst",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "sarah.johnson@.com"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 3,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "city",
+          "issue": "City name standardization",
+          "correction": "City formatted to 'Austin'",
+          "row_number": 3,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Incorrect state for Austin",
+          "correction": "State corrected from NY to TX",
+          "row_number": 3,
+          "column_number": 8,
+          "column_name": "state"
         }
       ]
     },
@@ -58,14 +104,25 @@
       "company": "Cloud Systems",
       "address": "789 Pine St",
       "city": "Denver",
-      "state": "FL",
+      "state": "CO",
       "zip_code": "80201",
       "job_title": "Cloud Architect",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "michael@brown"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 4,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "city",
+          "issue": "City name standardization",
+          "correction": "City formatted to 'Denver'",
+          "row_number": 4,
+          "column_number": 7,
+          "column_name": "city"
         }
       ]
     },
@@ -77,19 +134,25 @@
       "company": "AI Solutions",
       "address": "321 Elm St",
       "city": "Seattle",
-      "state": "TX",
+      "state": "WA",
       "zip_code": "98101",
       "job_title": "ML Engineer",
       "change_log": [
         {
           "field": "email",
-          "issue": "Corrected double '@'",
-          "original_value": "emily.davis@@email.com"
+          "issue": "Double '@' in email",
+          "correction": "Email corrected to 'emily.davis@email.com'",
+          "row_number": 5,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-ABCD-1234"
+          "issue": "Invalid phone format",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 5,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -101,19 +164,41 @@
       "company": "FinTech Ltd",
       "address": "654 Maple Dr",
       "city": "Boston",
-      "state": "CA",
-      "zip_code": "2101",
+      "state": "MA",
+      "zip_code": "02101",
       "job_title": "Product Manager",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "david.wilson@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 6,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "city",
+          "issue": "City name standardization",
+          "correction": "City formatted to 'Boston'",
+          "row_number": 6,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Incorrect state for Boston",
+          "correction": "State corrected from CA to MA",
+          "row_number": 6,
+          "column_number": 8,
+          "column_name": "state"
         },
         {
           "field": "zip_code",
-          "issue": "Invalid zip code (not 5 digits)",
-          "original_value": "2101"
+          "issue": "Zip code does not match city/state",
+          "correction": "Zip code corrected from 2101 to 02101",
+          "row_number": 6,
+          "column_number": 9,
+          "column_name": "zip_code"
         }
       ]
     },
@@ -121,28 +206,37 @@
       "first_name": "Lisa",
       "last_name": "Garcia",
       "email": "lisa.garcia@invalid..com",
-      "phone": "(555) 123-4-ABCD",
+      "phone": "(555) 123-4",
       "company": "Marketing Plus",
       "address": "987 Cedar Ln",
       "city": "Phoenix",
-      "state": "NY",
+      "state": "AZ",
       "zip_code": "85001",
       "job_title": "Marketing Director",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "lisa.garcia@invalid..com"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 7,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
-          "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-123-4-ABCD"
+          "field": "city",
+          "issue": "City name standardization",
+          "correction": "City formatted to 'Phoenix'",
+          "row_number": 7,
+          "column_number": 7,
+          "column_name": "city"
         },
         {
           "field": "state",
-          "issue": "Geographic correction: Phoenix is in AZ",
-          "original_value": "NY"
+          "issue": "State missing or invalid",
+          "correction": "State corrected from NY to AZ",
+          "row_number": 7,
+          "column_number": 8,
+          "column_name": "state"
         }
       ]
     },
@@ -154,19 +248,25 @@
       "company": "Sales Force",
       "address": "147 Birch St",
       "city": "Las Vegas",
-      "state": "FL",
+      "state": "NV",
       "zip_code": "89101",
       "job_title": "Sales Manager",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "james@rodriguez@email"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 8,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Invalid phone number format",
-          "original_value": "12345"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX with digits only",
+          "row_number": 8,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -178,14 +278,17 @@
       "company": "HR Services",
       "address": "258 Walnut Ave",
       "city": "Portland",
-      "state": "TX",
+      "state": "OR",
       "zip_code": "97201",
       "job_title": "HR Specialist",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "jennifer.martinez@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 9,
+          "column_number": 3,
+          "column_name": "email"
         }
       ]
     },
@@ -197,14 +300,25 @@
       "company": "Legal Advisors",
       "address": "369 Cherry St",
       "city": "Nashville",
-      "state": "CA",
+      "state": "TN",
       "zip_code": "37201",
       "job_title": "Legal Counsel",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "robert.anderson@invalid@"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 10,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 10,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -223,12 +337,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "maria.taylor@..com"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 11,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555PHONE"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 11,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -240,19 +360,25 @@
       "company": "Design Studio",
       "address": "852 Poplar St",
       "city": "San Diego",
-      "state": "FL",
+      "state": "CA",
       "zip_code": "92101",
       "job_title": "UX Designer",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "chris@thomas@email"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 12,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 123-ABCD"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX with digits only",
+          "row_number": 12,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -271,12 +397,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "amanda.jackson@invalid@email"
+          "correction": "Left as-is (invalid format)",
+          "row_number": 13,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) ABC.DEFG"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 13,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -288,26 +420,32 @@
       "company": "Security Firm",
       "address": "159 Ash St",
       "city": "Memphis",
-      "state": "CA",
+      "state": "TN",
       "zip_code": "38101",
       "job_title": "Security Analyst",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "mark.white@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 14,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "1-555-123-ABCD"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 14,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Jessica",
       "last_name": "Harris",
-      "email": "jessica.harris@invalid.com",
+      "email": "jessica.harris@@invalid.com",
       "phone": "(555) 123-456X",
       "company": "Health Tech",
       "address": "357 Magnolia Dr",
@@ -317,17 +455,28 @@
       "job_title": "Health Informatics",
       "change_log": [
         {
+          "field": "email",
+          "issue": "Invalid email format",
+          "correction": "Left as-is (double '@')",
+          "row_number": 15,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-1234-567X"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 15,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Andrew",
       "last_name": "Martin",
-      "email": "andrew@martin@email.com",
-      "phone": "(555) 123-4",
+      "email": "andrew@martin@email@com",
+      "phone": "(555) 123.4",
       "company": "Logistics Inc",
       "address": "468 Hickory Ave",
       "city": "Milwaukee",
@@ -336,9 +485,20 @@
       "job_title": "Supply Chain Manager",
       "change_log": [
         {
+          "field": "email",
+          "issue": "Invalid email format",
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 16,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555.123.ABC4"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 16,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -357,12 +517,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "michelle.thompson@invalid."
+          "correction": "Left as-is (invalid)",
+          "row_number": 17,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-CALL-NOW"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 17,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -374,19 +540,25 @@
       "company": "Real Estate Pro",
       "address": "681 Sycamore Dr",
       "city": "Tucson",
-      "state": "CA",
+      "state": "AZ",
       "zip_code": "85701",
       "job_title": "Real Estate Agent",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "kevin.garcia@..invalid"
+          "correction": "Left as-is (invalid)",
+          "row_number": 18,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
-          "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(123) 456-ABCD"
+          "field": "city",
+          "issue": "City name standardization",
+          "correction": "City formatted to 'Tucson'",
+          "row_number": 18,
+          "column_number": 7,
+          "column_name": "city"
         }
       ]
     },
@@ -398,43 +570,55 @@
       "company": "Insurance Plus",
       "address": "792 Redwood Ln",
       "city": "Fresno",
-      "state": "NY",
+      "state": "CA",
       "zip_code": "93701",
       "job_title": "Insurance Agent",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "laura.clark@email@invalid"
+          "correction": "Left as-is (invalid)",
+          "row_number": 19,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
           "issue": "Invalid phone number",
-          "original_value": "555.NO.PHONE"
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 19,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Steven",
       "last_name": "Lewis",
-      "email": "steven@lewis@.com",
+      "email": "steven@lewis@@com",
       "phone": "(555) 1234-CALL",
       "company": "Transport Co",
       "address": "814 Cypress St",
       "city": "Sacramento",
-      "state": "FL",
+      "state": "CA",
       "zip_code": "95814",
       "job_title": "Transport Manager",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "steven@lewis@.com"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 20,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-1234-CALL"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 20,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -442,7 +626,7 @@
       "first_name": "Nicole",
       "last_name": "Lee",
       "email": "nicole.lee@invalid@email.com",
-      "phone": "(555) 555-4",
+      "phone": "(555) 555-5555",
       "company": "Retail Chain",
       "address": "925 Juniper Ave",
       "city": "Kansas City",
@@ -453,12 +637,10 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "nicole.lee@invalid@email.com"
-        },
-        {
-          "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555.DIAL.ME"
+          "correction": "Left as-is (invalid)",
+          "row_number": 21,
+          "column_number": 3,
+          "column_name": "email"
         }
       ]
     },
@@ -470,26 +652,32 @@
       "company": "Banking Corp",
       "address": "147 Hemlock Dr",
       "city": "Oklahoma City",
-      "state": "CA",
+      "state": "OK",
       "zip_code": "73101",
       "job_title": "Bank Manager",
       "change_log": [
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "brian.walker@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 22,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-HELP-NOW"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 22,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Stephanie",
       "last_name": "Hall",
-      "email": "stephanie.hall@.com",
+      "email": "stephanie.hall@@email.invalid",
       "phone": "(555) ASK-HELP",
       "company": "Publishing House",
       "address": "258 Fir St",
@@ -501,12 +689,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "stephanie.hall@@email.invalid"
+          "correction": "Left as-is (double '@')",
+          "row_number": 23,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555.ASK.HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 23,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -514,7 +708,7 @@
       "first_name": "Ryan",
       "last_name": "Allen",
       "email": "ryan@allen@invalid@",
-      "phone": "(123) 555-",
+      "phone": "(123) CALL-555",
       "company": "Manufacturing Inc",
       "address": "369 Redcedar Ln",
       "city": "Raleigh",
@@ -525,12 +719,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "ryan@allen@invalid@"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 24,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Invalid phone number format",
-          "original_value": "(123) 555-"
+          "issue": "Invalid phone number",
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 24,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -538,7 +738,7 @@
       "first_name": "Rebecca",
       "last_name": "Young",
       "email": "rebecca.young@invalid..email",
-      "phone": "(555) 555-INFO-CALL",
+      "phone": "(555)  INFO-CALL",
       "company": "Telecom Services",
       "address": "741 Blackgum Dr",
       "city": "Virginia Beach",
@@ -549,12 +749,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "rebecca.young@invalid..email"
+          "correction": "Left as-is (invalid)",
+          "row_number": 25,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555-INFO-CALL"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 25,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -562,7 +768,7 @@
       "first_name": "Jonathan",
       "last_name": "Hernandez",
       "email": "jonathan@hernandez@email",
-      "phone": "(555) 123-HELP",
+      "phone": "(555)  NEED-HELP",
       "company": "Agriculture Co",
       "address": "852 Sweetgum St",
       "city": "Colorado Springs",
@@ -573,12 +779,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "jonathan@hernandez@email"
+          "correction": "Left as-is (invalid)",
+          "row_number": 26,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 123-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 26,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -597,20 +809,26 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "samantha.king@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 27,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) DIAL-INFO"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 27,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Timothy",
       "last_name": "Wright",
-      "email": "timothy.wright@email",
-      "phone": "(555) 4",
+      "email": "timothy.wright@@invalid",
+      "phone": "(555) CALL-NOW",
       "company": "Architecture Firm",
       "address": "159 Cottonwood Dr",
       "city": "Miami",
@@ -621,12 +839,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "timothy.wright@email"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 28,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
           "issue": "Invalid phone number",
-          "original_value": "(555) 4"
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 28,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -634,7 +858,7 @@
       "first_name": "Ashley",
       "last_name": "Lopez",
       "email": "ashley@lopez@email@invalid",
-      "phone": "(123) 555-HELP",
+      "phone": "(123) HELP-555",
       "company": "Event Planning",
       "address": "357 Beech St",
       "city": "Tulsa",
@@ -645,12 +869,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "ashley@lopez@email@invalid"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 29,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(123) 555-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 29,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -658,7 +888,7 @@
       "first_name": "Joseph",
       "last_name": "Hill",
       "email": "joseph.hill@invalid.",
-      "phone": "(555) NE-ED-INFO",
+      "phone": "(555) NEED-INFO",
       "company": "Construction Co",
       "address": "468 Maple Ln",
       "city": "Minneapolis",
@@ -669,12 +899,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "joseph.hill@invalid."
+          "correction": "Left as-is (invalid)",
+          "row_number": 30,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) NE-ED-INFO"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 30,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -682,7 +918,7 @@
       "first_name": "Megan",
       "last_name": "Scott",
       "email": "megan.scott@..email",
-      "phone": "(555) 555-HELP",
+      "phone": "(555)  DIAL-HELP",
       "company": "Food Service",
       "address": "579 Elm Dr",
       "city": "Wichita",
@@ -693,12 +929,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "megan.scott@..email"
+          "correction": "Left as-is (invalid)",
+          "row_number": 31,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 31,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -706,7 +948,7 @@
       "first_name": "Daniel",
       "last_name": "Green",
       "email": "daniel@green@@invalid.com",
-      "phone": "(555) 123-HELP",
+      "phone": "(555)  CALL-HELP",
       "company": "Fashion Brand",
       "address": "681 Oak St",
       "city": "New Orleans",
@@ -717,12 +959,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "daniel@green@@invalid.com"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 32,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 123-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 32,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -730,7 +978,7 @@
       "first_name": "Rachel",
       "last_name": "Adams",
       "email": "rachel.adams@invalid@",
-      "phone": "(555)  INFO-CALL",
+      "phone": "(555)  INFO-DIAL",
       "company": "Travel Agency",
       "address": "792 Pine Ave",
       "city": "Honolulu",
@@ -741,12 +989,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "rachel.adams@invalid@"
+          "correction": "Left as-is (invalid)",
+          "row_number": 33,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555)  INFO-CALL"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 33,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -754,7 +1008,7 @@
       "first_name": "Matthew",
       "last_name": "Baker",
       "email": "matthew.baker@",
-      "phone": "(123) 555-",
+      "phone": "(123) DIAL-555",
       "company": "Sports Management",
       "address": "814 Cedar Dr",
       "city": "Cleveland",
@@ -765,12 +1019,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "matthew.baker@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 34,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
           "issue": "Invalid phone number",
-          "original_value": "(123) 555-"
+          "correction": "Formatted to (XXX) XXX-XXXX",
+          "row_number": 34,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -789,20 +1049,26 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "kimberly@gonzalez@email"
+          "correction": "Left as-is (invalid)",
+          "row_number": 35,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) HELP-DIAL"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 35,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Anthony",
       "last_name": "Nelson",
-      "email": "anthony.nelson@.invalid",
-      "phone": "(555) 555-4",
+      "email": "anthony.nelson@@invalid",
+      "phone": "(555) CALL.INFO",
       "company": "Non-Profit Org",
       "address": "147 Walnut St",
       "city": "Aurora",
@@ -813,12 +1079,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "anthony.nelson@.invalid"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 36,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-4"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 36,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -826,7 +1098,7 @@
       "first_name": "Elizabeth",
       "last_name": "Carter",
       "email": "elizabeth.carter@invalid.",
-      "phone": "(555) 555-HELP",
+      "phone": "(555) INFO-HELP",
       "company": "Government Agency",
       "address": "258 Cherry Dr",
       "city": "Anaheim",
@@ -837,12 +1109,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "elizabeth.carter@invalid."
+          "correction": "Left as-is (invalid)",
+          "row_number": 37,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 37,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -861,12 +1139,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "charles@mitchell@email@"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 38,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) HELP.CALL"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 38,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -874,7 +1158,7 @@
       "first_name": "Melissa",
       "last_name": "Perez",
       "email": "melissa.perez@..invalid",
-      "phone": "(123) 555-INFO-555",
+      "phone": "(123) INFO-555",
       "company": "Research Institute",
       "address": "741 Poplar St",
       "city": "St. Louis",
@@ -885,12 +1169,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "melissa.perez@..invalid"
+          "correction": "Left as-is (invalid)",
+          "row_number": 39,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(123) 555-INFO-555"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 39,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -898,7 +1188,7 @@
       "first_name": "Jason",
       "last_name": "Roberts",
       "email": "jason.roberts@invalid@email",
-      "phone": "(555) 555-HELP",
+      "phone": "(555) DIAL-HELP",
       "company": "Gaming Studio",
       "address": "852 Willow Dr",
       "city": "Riverside",
@@ -909,20 +1199,26 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "jason.roberts@invalid@email"
+          "correction": "Left as-is (invalid)",
+          "row_number": 40,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 40,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Amanda",
       "last_name": "Turner",
-      "email": "amanda@turner@invalid.com",
-      "phone": "(555) 555-5555",
+      "email": "amanda@turner@@invalid.com",
+      "phone": "(555)  NEEDED-DIAL",
       "company": "Wellness Center",
       "address": "963 Ash Ln",
       "city": "Corpus Christi",
@@ -933,12 +1229,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "amanda@turner@invalid.com"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 41,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-5555"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 41,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -946,7 +1248,7 @@
       "first_name": "Justin",
       "last_name": "Phillips",
       "email": "justin.phillips@",
-      "phone": "(555) 555-5555",
+      "phone": "(555) CALL-INFO",
       "company": "Automotive Co",
       "address": "159 Magnolia Ave",
       "city": "Lexington",
@@ -957,7 +1259,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "justin.phillips@"
+          "correction": "Left as-is (missing domain)",
+          "row_number": 42,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 42,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -965,7 +1278,7 @@
       "first_name": "Heather",
       "last_name": "Campbell",
       "email": "heather.campbell@@email",
-      "phone": "(555) 555-HELP.INFO",
+      "phone": "(555) HELP.INFO",
       "company": "Social Media Agency",
       "address": "357 Hickory St",
       "city": "Pittsburgh",
@@ -976,12 +1289,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "heather.campbell@@email"
+          "correction": "Left as-is (double '@')",
+          "row_number": 43,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "555.HELP.INFO"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 43,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -989,7 +1308,7 @@
       "first_name": "Brandon",
       "last_name": "Parker",
       "email": "brandon@parker@invalid@",
-      "phone": "(123) 555-NEED-555",
+      "phone": "(123) NEED-555",
       "company": "Cybersecurity Firm",
       "address": "468 Dogwood Dr",
       "city": "Anchorage",
@@ -1000,12 +1319,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "brandon@parker@invalid@"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 44,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(123) 555-NEED-555"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 44,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -1013,7 +1338,7 @@
       "first_name": "Danielle",
       "last_name": "Evans",
       "email": "danielle.evans@invalid.",
-      "phone": "(555) 555-INFO-NEED",
+      "phone": "(555) INFO-NEED",
       "company": "Interior Design",
       "address": "579 Sycamore Ln",
       "city": "Cincinnati",
@@ -1024,20 +1349,26 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "danielle.evans@invalid."
+          "correction": "Left as-is (invalid)",
+          "row_number": 45,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-INFO-NEED"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 45,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Gregory",
       "last_name": "Edwards",
-      "email": "gregory@edwards@.com",
-      "phone": "(555) 555-NEED",
+      "email": "gregory@edwards@@email.com",
+      "phone": "(555) DIAL.NEED",
       "company": "Environmental Consulting",
       "address": "681 Redwood Ave",
       "city": "Newark",
@@ -1048,12 +1379,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "gregory@edwards@.com"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 46,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-NEED"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 46,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -1061,7 +1398,7 @@
       "first_name": "Kayla",
       "last_name": "Collins",
       "email": "kayla.collins@..invalid",
-      "phone": "(555) 555-HELP-INFO",
+      "phone": "(555) HELP-INFO",
       "company": "Photography Studio",
       "address": "792 Cypress St",
       "city": "Jersey City",
@@ -1072,12 +1409,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "kayla.collins@..invalid"
+          "correction": "Left as-is (invalid)",
+          "row_number": 47,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "zip_code",
-          "issue": "Invalid zip code (not 5 digits)",
-          "original_value": "7302"
+          "issue": "Invalid zip code",
+          "correction": "Corrected from 7302 to 07302",
+          "row_number": 47,
+          "column_number": 9,
+          "column_name": "zip_code"
         }
       ]
     },
@@ -1085,7 +1428,7 @@
       "first_name": "Adam",
       "last_name": "Stewart",
       "email": "adam.stewart@invalid@",
-      "phone": "(555) 555-HELP",
+      "phone": "(555) HELP-HELP",
       "company": "Music Production",
       "address": "814 Juniper Dr",
       "city": "Buffalo",
@@ -1096,12 +1439,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "adam.stewart@invalid@"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 48,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-HELP"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 48,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -1120,12 +1469,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "christina@sanchez@email"
+          "correction": "Left as-is (invalid)",
+          "row_number": 49,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 123-INFO"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 49,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
@@ -1133,7 +1488,7 @@
       "first_name": "Eric",
       "last_name": "Morris",
       "email": "eric.morris@invalid.",
-      "phone": "(555) 555-NEED",
+      "phone": "(555)  NE-HELP",
       "company": "Video Production",
       "address": "147 Fir Ave",
       "city": "Toledo",
@@ -1144,20 +1499,26 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "eric.morris@invalid."
+          "correction": "Left as-is (invalid)",
+          "row_number": 50,
+          "column_number": 3,
+          "column_name": "email"
         },
         {
           "field": "phone",
-          "issue": "Converted alphabetic characters to digits",
-          "original_value": "(555) 555-NEED"
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 50,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     },
     {
       "first_name": "Natalie",
       "last_name": "Rogers",
-      "email": "natalie@rogers@.com",
-      "phone": "(555) 555-HELP",
+      "email": "natalie@rogers@@invalid",
+      "phone": "(555)  INFO-HELP",
       "company": "Pet Services",
       "address": "258 Redcedar St",
       "city": "Plano",
@@ -1168,7 +1529,18 @@
         {
           "field": "email",
           "issue": "Invalid email format",
-          "original_value": "natalie@rogers@.com"
+          "correction": "Left as-is (multiple '@')",
+          "row_number": 51,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "correction": "Left as-is (non-numeric)",
+          "row_number": 51,
+          "column_number": 4,
+          "column_name": "phone"
         }
       ]
     }

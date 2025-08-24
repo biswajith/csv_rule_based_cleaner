@@ -4,12 +4,14 @@ A Python-based system that cleans person/lead information from CSV files using L
 
 ## Features
 
-- **LLM-First Approach**: All data cleaning decisions made by OpenAI LLM via LangChain
+- **LLM-First Approach**: All data cleaning decisions made by OpenAI GPT-4 via LangChain
 - **Dynamic Rule Processing**: User-provided rules expanded by LLM into comprehensive cleaning instructions
-- **Scalable Processing**: Handles large CSV files through chunked processing
-- **Intelligent Validation**: Phone number normalization and geographical data validation via LLM
-- **Detailed Logging**: Complete audit trail of all changes made
-- **JSON Output**: Structured output with cleaned data and change logs
+- **Optimized Processing**: Efficient chunked processing (default 50 records/chunk) with parallel execution
+- **Intelligent Validation**: Built-in geographic validation, phone number normalization, and email validation
+- **Complete Change Tracking**: Detailed audit trail of every change with before/after values
+- **Multiple Output Formats**: JSON and CSV output with comprehensive metadata and summaries
+- **Production Ready**: Robust error handling, retry logic, and performance monitoring
+- **Memory Optimized**: Handles large files efficiently with optimized memory usage
 
 ## Installation
 
@@ -44,22 +46,24 @@ Create a `.env` file in the project root with the following variables:
 # OpenAI API Configuration
 OPENAI_API_KEY=your_openai_api_key_here
 OPENAI_MODEL=gpt-4
-OPENAI_MAX_TOKENS=4000
+OPENAI_MAX_TOKENS=8000
 OPENAI_TEMPERATURE=0.1
 
+# Operation-specific token limits
+RULE_EXPANSION_MAX_TOKENS=8000
+DATA_CLEANING_MAX_TOKENS=30000
+VALIDATION_MAX_TOKENS=10000
+
 # Processing Configuration
-CHUNK_SIZE=250
+CHUNK_SIZE=50  # Optimized for reliability and performance
 MAX_RETRIES=1
 RETRY_DELAY=1.0
 ENABLE_PARALLEL_PROCESSING=true
 
-# Parallel Processing Control
-# Set to false for sequential processing (useful for debugging, 
-# rate limiting concerns, or when experiencing API rate limits)
-
 # Logging Configuration
 LOG_LEVEL=INFO
 LOG_FILE=logs/csv_cleaner.log
+ENABLE_DETAILED_LLM_LOGGING=true
 
 # Output Configuration
 OUTPUT_FORMAT=json
@@ -68,7 +72,7 @@ GENERATE_SUMMARY=true
 
 # Performance Configuration
 MAX_CONCURRENT_REQUESTS=5
-REQUEST_TIMEOUT=30.0
+REQUEST_TIMEOUT=600.0  # 10 minutes for large chunks
 RATE_LIMIT_REQUESTS_PER_MINUTE=60
 ```
 
@@ -118,7 +122,7 @@ python main.py path/to/your/data.csv
 python main.py path/to/your/data.csv path/to/your/rules.txt
 ```
 
-If no file is provided, it will create a sample CSV for demonstration.
+**Note**: The main script now runs directly without preview steps for optimal performance. If no file is provided, it will create a sample CSV for demonstration.
 
 ### Rule Definition Options
 
@@ -155,7 +159,7 @@ Phone numbers should be in (XXX) XXX-XXXX format
 Remove any test or invalid data
 ```
 
-### Preview Before Cleaning
+### Preview Before Cleaning (Optional)
 
 ```python
 import asyncio
@@ -167,7 +171,7 @@ async def preview_cleaning():
     # Can use list of rules OR path to rules file
     rules = "examples/cleaning_rules.txt"  # or use a list
     
-    # Preview on first 10 rows
+    # Preview on first 10 rows (optional - for testing rules)
     preview = await processor.preview_file("input.csv", rules, preview_rows=10)
     
     if preview["status"] == "success":
@@ -176,6 +180,8 @@ async def preview_cleaning():
 
 asyncio.run(preview_cleaning())
 ```
+
+**Note**: Preview functionality is available but not required. The main processing workflow is optimized to run directly without preview steps.
 
 ## System Architecture
 
@@ -221,12 +227,19 @@ rules = [
 
 ## Output Files
 
-The system generates several output files:
+The system generates comprehensive output files with timestamps:
 
-1. **cleaned_data.json**: Main output with cleaned records
-2. **changelog.json**: Detailed log of all changes made
-3. **summary.json**: Processing summary and statistics
-4. **cleaned_data.csv**: CSV format output (optional)
+1. **`{filename}_cleaned_{timestamp}.json`**: Main output with cleaned records and metadata
+2. **`{filename}_cleaned_{timestamp}.csv`**: CSV format output with cleaned data
+3. **Processing summary**: Embedded in JSON output with detailed statistics
+4. **Change logs**: Detailed tracking of every modification made
+
+### Output includes:
+- **Cleaned data** with all original records preserved
+- **Change tracking** with before/after values for every modification
+- **Processing statistics** including success rates and performance metrics
+- **Rule application logs** showing which rules were applied where
+- **Error reporting** for any issues encountered during processing
 
 ### Sample Output Structure
 
@@ -256,22 +269,26 @@ The system generates several output files:
 
 ## Performance
 
-- **Chunked Processing**: Handles large files by processing in chunks (default: 250 records)
-- **Configurable Processing**: Parallel or sequential chunk processing
-- **Rate Limiting**: Respects OpenAI API limits  
-- **Retry Logic**: Automatic retry for failed LLM calls
+- **Optimized Chunked Processing**: Handles large files efficiently (default: 50 records/chunk for optimal reliability)
+- **Parallel Processing**: Concurrent chunk processing with configurable limits
+- **Intelligent Rate Limiting**: Respects OpenAI API limits with automatic throttling
+- **Robust Retry Logic**: Automatic retry for failed LLM calls with exponential backoff
+- **Memory Optimization**: Memory-efficient processing for large datasets
+- **Progress Monitoring**: Real-time progress tracking and performance metrics
 
 ### Processing Modes
 
 **Parallel Processing (Default)**: `ENABLE_PARALLEL_PROCESSING=true`
-- ✅ **Faster processing** for large files
+- ✅ **Faster processing** for large files (up to 5x speed improvement)
 - ✅ **Efficient resource usage** through concurrent chunk processing
-- ⚠️ **Higher API usage** - may hit rate limits with large files
+- ✅ **Smart rate limiting** - automatically manages API limits
+- ⚠️ **Higher API usage** - monitor costs with very large files
 
 **Sequential Processing**: `ENABLE_PARALLEL_PROCESSING=false`  
 - ✅ **Better for debugging** - easier to trace issues
-- ✅ **Avoids rate limits** - processes chunks one at a time
+- ✅ **Lower cost** - processes chunks one at a time
 - ✅ **Consistent progress** - predictable processing order
+- ✅ **Better for rate-limited accounts** - avoids API throttling
 - ⚠️ **Slower processing** - takes longer for large files
 
 ## Logging
@@ -336,30 +353,36 @@ pre-commit install
 ```
 csv_rule_based_cleaner/
 ├── src/csv_cleaner/           # Main package
-│   ├── core/                  # Core components (LLM, Rules, Validation)
+│   ├── core/                  # Core components
 │   │   ├── cleaner.py         # Main CSV cleaning orchestrator
 │   │   ├── processor.py       # High-level data processing interface
-│   │   ├── rule_manager.py    # Centralized rule processing
+│   │   ├── rule_manager.py    # Centralized rule processing and expansion
 │   │   ├── validation_manager.py # Unified validation coordination
-│   │   ├── llm_client.py      # OpenAI LLM integration
+│   │   ├── llm_client.py      # OpenAI GPT integration via LangChain
 │   │   └── csv_reader.py      # CSV file reading and parsing
 │   ├── processors/            # Data processing modules
-│   │   ├── chunk_processor.py # Chunk-based processing
-│   │   ├── parallel_processor.py # Parallel processing
-│   │   └── change_tracker.py  # Change tracking and audit
+│   │   ├── chunk_processor.py # Optimized chunk-based processing
+│   │   ├── parallel_processor.py # Concurrent parallel processing
+│   │   └── change_tracker.py  # Comprehensive change tracking
 │   ├── utils/                 # Utility modules
-│   │   ├── output_generator.py # Output file generation
-│   │   ├── error_handler.py   # Error handling and recovery
-│   │   ├── performance_monitor.py # Performance tracking
-│   │   └── validation_reporter.py # Validation reporting
+│   │   ├── output_generator.py # Multi-format output generation
+│   │   ├── error_handler.py   # Robust error handling and recovery
+│   │   ├── performance_monitor.py # Real-time performance tracking
+│   │   ├── memory_optimizer.py # Memory usage optimization
+│   │   ├── markdown_reporter.py # Reporting and documentation
+│   │   └── validation_reporter.py # Validation result reporting
+│   ├── validators/            # Data validation modules
 │   └── config/                # Configuration management
-│       └── settings.py        # Application settings
-├── tests/                     # Test suite
+│       └── settings.py        # Comprehensive application settings
+├── tests/                     # Comprehensive test suite
+│   ├── unit/                  # Unit tests
+│   └── integration/           # Integration tests
 ├── examples/                  # Example files and rules
-├── docs/                      # Documentation
-├── logs/                      # Log files
+├── docs/                      # Project documentation
+├── logs/                      # Application logs
 ├── output/                    # Generated outputs
-└── main.py                    # Example entry point
+├── temp/                      # Temporary processing files
+└── main.py                    # Optimized entry point (no preview step)
 ```
 
 ## Contributing
@@ -382,11 +405,23 @@ For questions or issues:
 2. Review existing issues
 3. Create a new issue with detailed information
 
+## Recent Improvements
+
+- ✅ **Optimized chunking**: Reduced default chunk size to 50 for better reliability
+- ✅ **Enhanced token management**: Operation-specific token limits for better control
+- ✅ **Streamlined workflow**: Removed unnecessary preview step from main processing
+- ✅ **Improved error handling**: More robust retry logic and error recovery
+- ✅ **Memory optimization**: Better memory usage for large file processing
+- ✅ **Geographic validation**: Built-in city-state validation with automatic corrections
+- ✅ **Enhanced change tracking**: Comprehensive before/after tracking for all modifications
+
 ## Roadmap
 
-- [ ] Web interface for rule definition
-- [ ] Support for additional file formats
-- [ ] Real-time processing capabilities
-- [ ] Integration with data pipeline tools
-- [ ] Custom LLM model support
+- [ ] Web interface for rule definition and real-time processing
+- [ ] Support for additional file formats (Excel, Parquet, etc.)
+- [ ] Custom LLM model support (Azure OpenAI, Claude, etc.)
 - [ ] Confidence scoring for cleaning decisions
+- [ ] Integration with data pipeline tools (Airflow, Prefect)
+- [ ] Real-time streaming data processing capabilities
+- [ ] Advanced validation rules engine
+- [ ] Data quality scoring and recommendations

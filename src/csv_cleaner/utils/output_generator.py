@@ -85,7 +85,7 @@ class OutputGenerator:
         metadata: Dict[str, Any]
     ) -> str:
         """
-        Generate simple JSON output with cleaned data.
+        Generate comprehensive JSON output with cleaned data and enhanced change tracking.
         
         Args:
             processing_results: Processing results
@@ -96,37 +96,64 @@ class OutputGenerator:
             Path to generated file
         """
         try:
+            # Get original column headers for column mapping
+            original_headers = metadata.get("file_info", {}).get("column_headers", [])
+            column_map = {header: idx for idx, header in enumerate(original_headers)}
+            
             # Collect all cleaned data from successful chunks
             cleaned_records = []
             total_changes = 0
+            chunk_row_offset = 0  # Track absolute row numbers across chunks
             
             for result in processing_results.get("results", []):
                 if result.get("status") == "success":
                     cleaned_data = result.get("cleaned_data", "")
                     changes = result.get("changes", [])
                     total_changes += len(changes)
+                    chunk_start_row = result.get("chunk_info", {}).get("start_row", chunk_row_offset)
                     
-                    # Parse cleaned data
+                    # Parse cleaned data and enhance change logs
+                    chunk_records = []
                     if isinstance(cleaned_data, str) and cleaned_data.strip():
                         lines = cleaned_data.strip().split('\n')
                         if len(lines) > 1:  # Has header and data
                             headers = lines[0].split(',')
-                            for line in lines[1:]:
+                            for row_idx, line in enumerate(lines[1:]):
                                 values = line.split(',')
                                 if len(values) == len(headers):
                                     record = dict(zip(headers, values))
-                                    cleaned_records.append(record)
+                                    chunk_records.append(record)
                     elif isinstance(cleaned_data, list):
-                        cleaned_records.extend(cleaned_data)
+                        chunk_records.extend(cleaned_data)
+                    
+                    # Enhance change logs with row and column information
+                    for record_idx, record in enumerate(chunk_records):
+                        absolute_row = chunk_start_row + record_idx + 2  # +2 for header row and 1-based indexing
+                        
+                        if "change_log" in record and isinstance(record["change_log"], list):
+                            for change in record["change_log"]:
+                                if isinstance(change, dict):
+                                    # Add row and column information
+                                    change["row_number"] = absolute_row
+                                    field_name = change.get("field", "")
+                                    change["column_number"] = column_map.get(field_name, -1) + 1  # 1-based indexing
+                                    change["column_name"] = field_name
+                        
+                        cleaned_records.append(record)
+                    
+                    # Update row offset for next chunk
+                    chunk_row_offset += len(chunk_records)
             
-            # Create simple output structure
+            # Create comprehensive output structure
             output_data = {
                 "session_info": {
                     "session_id": metadata.get("session_id"),
                     "generated_at": datetime.now().isoformat(),
                     "input_file": metadata.get("file_info", {}).get("file_path"),
                     "success_rate": processing_results.get("success_rate", 0),
-                    "total_changes_made": total_changes
+                    "total_changes_made": total_changes,
+                    "total_records": len(cleaned_records),
+                    "original_columns": original_headers
                 },
                 "cleaned_data": cleaned_records
             }
@@ -135,7 +162,7 @@ class OutputGenerator:
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(output_data, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"Generated cleaned data JSON: {file_path} ({len(cleaned_records)} records)")
+            logger.info(f"Generated enhanced cleaned data JSON: {file_path} ({len(cleaned_records)} records)")
             return file_path
             
         except Exception as e:
@@ -214,6 +241,11 @@ class OutputGenerator:
             
             # Convert to DataFrame and save as CSV
             df = pd.DataFrame(all_cleaned_records)
+            
+            # Remove change_log column from CSV output - it should only be in JSON
+            if 'change_log' in df.columns:
+                df = df.drop('change_log', axis=1)
+                logger.info("Removed change_log column from CSV output")
             
             # Save as CSV
             df.to_csv(file_path, index=False, encoding='utf-8')

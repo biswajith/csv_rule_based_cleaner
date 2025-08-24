@@ -118,7 +118,9 @@ For EVERY record, you MUST check if city and state match. If you make ANY geogra
 2. TRACK ALL VALIDATIONS - Every check above must be performed on every record  
 3. USE CHANGE_LOG - Document all issues found, even if you can't fix them
 4. NEVER DROP RECORDS - Even if data is invalid, corrupt, or unfixable, keep the record
-5. LOG ALL CHANGES - If you correct geographic data, phone numbers, emails, etc., DOCUMENT IT in change_log
+5. LOG ALL CHANGES - If you correct geographic data, phone numbers, emails, etc., DOCUMENT IT in change_log. Never make a change without logging it.
+6. Document rule violations in change_log. Like invalid email, invalid phone number, etc. 
+7. Return the records in the same order as the input.
 
 ⚠️ RECORD PRESERVATION OVERRIDE:
 - If a record has invalid data → KEEP IT, add to change_log
