@@ -1,8 +1,9 @@
 """
-Output Generator - Creates JSON output and detailed change logs.
+Output Generator - Creates user-friendly data reports and essential outputs.
 """
 
 import json
+import pandas as pd
 from typing import Dict, List, Any, Optional
 from pathlib import Path
 from datetime import datetime
@@ -11,9 +12,10 @@ from loguru import logger
 from ..config.settings import settings
 
 
+
 class OutputGenerator:
     """
-    Generates output files and change logs from LLM processing results.
+    Generates user-friendly data reports and essential JSON output.
     """
     
     def __init__(self):
@@ -26,7 +28,7 @@ class OutputGenerator:
         metadata: Dict[str, Any]
     ) -> Dict[str, Any]:
         """
-        Generate consolidated output files: cleaned_data.json and summary.json.
+        Generate essential output files: cleaned data and user-friendly reports.
         
         Args:
             processing_results: Results from chunk processing
@@ -37,29 +39,32 @@ class OutputGenerator:
             Information about generated files
         """
         try:
-            logger.info(f"Generating consolidated output files at: {output_path}")
+            logger.info(f"Generating output files at: {output_path}")
             
             # Create output directory
             output_dir = Path(output_path).parent
             output_dir.mkdir(parents=True, exist_ok=True)
             
             generated_files = {}
+            session_id = metadata.get("session_id", "unknown")
             
-            # Generate cleaned data JSON (always generated)
-            json_file = await self._generate_json_output(
+            # Generate cleaned CSV file (main output)
+            csv_file = await self._generate_cleaned_csv(
+                processing_results, f"{output_path}_cleaned.csv", metadata
+            )
+            generated_files["cleaned_csv"] = csv_file
+            
+            # Generate cleaned data JSON (for programmatic use)
+            json_file = await self._generate_cleaned_data_json(
                 processing_results, f"{output_path}.json", metadata
             )
             generated_files["cleaned_data"] = json_file
             
-            # Generate consolidated summary report (includes all metadata)
-            summary_file = await self._generate_consolidated_summary(
-                processing_results, metadata, f"{output_path}_summary.json"
-            )
-            generated_files["summary"] = summary_file
+
             
             self.output_files = generated_files
             
-            logger.info(f"Generated {len(generated_files)} consolidated output files")
+            logger.info(f"Generated {len(generated_files)} output files")
             return {
                 "status": "success",
                 "output_files": generated_files,
@@ -73,14 +78,14 @@ class OutputGenerator:
                 "error": str(e)
             }
     
-    async def _generate_json_output(
+    async def _generate_cleaned_data_json(
         self, 
         processing_results: Dict[str, Any], 
         file_path: str,
         metadata: Dict[str, Any]
     ) -> str:
         """
-        Generate JSON output with cleaned data.
+        Generate simple JSON output with cleaned data.
         
         Args:
             processing_results: Processing results
@@ -101,48 +106,27 @@ class OutputGenerator:
                     changes = result.get("changes", [])
                     total_changes += len(changes)
                     
-                    # Parse cleaned data (assuming it's CSV format from LLM)
-                    try:
-                        # Convert CSV string to records if needed
-                        if isinstance(cleaned_data, str) and cleaned_data.strip():
-                            lines = cleaned_data.strip().split('\n')
-                            if len(lines) > 1:  # Has header and data
-                                headers = lines[0].split(',')
-                                for line in lines[1:]:
-                                    values = line.split(',')
-                                    if len(values) == len(headers):
-                                        record = dict(zip(headers, values))
-                                        record['_chunk_index'] = result.get("chunk_index")
-                                        cleaned_records.append(record)
-                        elif isinstance(cleaned_data, list):
-                            # Already in record format
-                            for record in cleaned_data:
-                                record['_chunk_index'] = result.get("chunk_index")
-                                cleaned_records.append(record)
-                    except Exception as parse_error:
-                        logger.warning(f"Could not parse cleaned data from chunk {result.get('chunk_index')}: {parse_error}")
+                    # Parse cleaned data
+                    if isinstance(cleaned_data, str) and cleaned_data.strip():
+                        lines = cleaned_data.strip().split('\n')
+                        if len(lines) > 1:  # Has header and data
+                            headers = lines[0].split(',')
+                            for line in lines[1:]:
+                                values = line.split(',')
+                                if len(values) == len(headers):
+                                    record = dict(zip(headers, values))
+                                    cleaned_records.append(record)
+                    elif isinstance(cleaned_data, list):
+                        cleaned_records.extend(cleaned_data)
             
-            # Create output structure
+            # Create simple output structure
             output_data = {
-                "metadata": {
-                    "generated_at": datetime.now().isoformat(),
+                "session_info": {
                     "session_id": metadata.get("session_id"),
+                    "generated_at": datetime.now().isoformat(),
                     "input_file": metadata.get("file_info", {}).get("file_path"),
-                    "total_records": len(cleaned_records),
-                    "total_changes_made": total_changes,
-                    "processing_summary": processing_results.get("processing_time_seconds"),
-                    "success_rate": processing_results.get("success_rate"),
-                    "llm_model": settings.openai_model,
-                    "chunk_size": settings.chunk_size
-                },
-                "cleaning_rules": {
-                    "original_rules": metadata.get("rule_expansion", {}).get("original_rules", []),
-                    "expanded_rules": metadata.get("rule_expansion", {}).get("expanded_rules", "")
-                },
-                "quality_analysis": metadata.get("quality_analysis", {}),
-                "specialized_processing": {
-                    "geographical_validation": metadata.get("geo_validation", {}),
-                    "phone_normalization": metadata.get("phone_normalization", {})
+                    "success_rate": processing_results.get("success_rate", 0),
+                    "total_changes_made": total_changes
                 },
                 "cleaned_data": cleaned_records
             }
@@ -151,172 +135,119 @@ class OutputGenerator:
             with open(file_path, 'w', encoding='utf-8') as f:
                 json.dump(output_data, f, indent=2, ensure_ascii=False)
             
-            logger.info(f"Generated JSON output: {file_path} ({len(cleaned_records)} records)")
+            logger.info(f"Generated cleaned data JSON: {file_path} ({len(cleaned_records)} records)")
             return file_path
             
         except Exception as e:
-            logger.error(f"Error generating JSON output: {str(e)}")
+            logger.error(f"Error generating cleaned data JSON: {str(e)}")
             raise
     
-
-    
-    async def _generate_consolidated_summary(
+    async def _generate_cleaned_csv(
         self, 
         processing_results: Dict[str, Any], 
-        metadata: Dict[str, Any],
-        file_path: str
+        file_path: str,
+        metadata: Dict[str, Any]
     ) -> str:
         """
-        Generate consolidated summary report with all metadata and analysis.
+        Generate cleaned CSV file that users can open directly.
         
         Args:
             processing_results: Processing results
+            file_path: Output CSV file path
             metadata: Additional metadata
-            file_path: Output file path
             
         Returns:
-            Path to generated file
+            Path to generated CSV file
         """
         try:
-            # Extract change log data
-            change_log_data = self._extract_change_log_data(processing_results)
-            
-            summary = {
-                "executive_summary": {
-                    "session_id": metadata.get("session_id"),
-                    "processed_at": datetime.now().isoformat(),
-                    "input_file": metadata.get("file_info", {}).get("file_path"),
-                    "total_records": metadata.get("file_info", {}).get("total_records", 0),
-                    "successful_chunks": processing_results.get("successful_chunks", 0),
-                    "failed_chunks": processing_results.get("failed_chunks", 0),
-                    "success_rate": processing_results.get("success_rate", 0),
-                    "processing_time_seconds": processing_results.get("processing_time_seconds", 0)
-                },
-                "data_quality_analysis": metadata.get("quality_analysis", {}),
-                "rule_processing": {
-                    "original_rules": metadata.get("rule_expansion", {}).get("original_rules", []),
-                    "rule_expansion_status": metadata.get("rule_expansion", {}).get("status"),
-                    "expanded_rules_preview": metadata.get("rule_expansion", {}).get("expanded_rules", "")[:500] + "..." if len(metadata.get("rule_expansion", {}).get("expanded_rules", "")) > 500 else metadata.get("rule_expansion", {}).get("expanded_rules", "")
-                },
-                "specialized_processing": {
-                    "comprehensive_validation": metadata.get("comprehensive_validation", {})
-                },
-                "performance_metrics": {
-                    "chunks_per_second": processing_results.get("chunks_per_second", 0),
-                    "records_per_second": (metadata.get("file_info", {}).get("total_records", 0) / processing_results.get("processing_time_seconds", 1)) if processing_results.get("processing_time_seconds", 0) > 0 else 0,
-                    "llm_model_used": settings.openai_model,
-                    "chunk_size": settings.chunk_size,
-                    "max_concurrent_requests": settings.max_concurrent_requests
-                },
-                "failure_analysis": processing_results.get("failures", []),
-                
-                # Consolidated data from previously separate files
-                "detailed_change_log": change_log_data,
-                "validation_report": metadata.get("validation_report", {}),
-                "change_tracking_report": metadata.get("change_tracker", {}),
-                "error_report": metadata.get("error_report", {}),
-                "performance_report": {
-                    "summary": "Performance data consolidated from performance monitor",
-                    "processing_time_breakdown": processing_results.get("processing_time_seconds", 0),
-                    "chunk_processing_stats": {
-                        "successful_chunks": processing_results.get("successful_chunks", 0),
-                        "failed_chunks": processing_results.get("failed_chunks", 0),
-                        "chunks_per_second": processing_results.get("chunks_per_second", 0)
-                    }
-                }
-            }
-            
-            with open(file_path, 'w', encoding='utf-8') as f:
-                json.dump(summary, f, indent=2, ensure_ascii=False)
-            
-            logger.info(f"Generated consolidated summary report: {file_path}")
-            return file_path
-            
-        except Exception as e:
-            logger.error(f"Error generating consolidated summary report: {str(e)}")
-            raise
-    
-
-    
-    def _extract_change_log_data(self, processing_results: Dict[str, Any]) -> Dict[str, Any]:
-        """
-        Extract and consolidate change log data from processing results.
-        
-        Args:
-            processing_results: Processing results
-            
-        Returns:
-            Consolidated change log data
-        """
-        try:
-            all_changes = []
+            # Collect all cleaned data from successful chunks
+            all_cleaned_records = []
             
             for result in processing_results.get("results", []):
                 if result.get("status") == "success":
-                    chunk_changes = result.get("changes", [])
-                    chunk_index = result.get("chunk_index", 0)
+                    cleaned_data = result.get("cleaned_data", "")
                     
-                    for change in chunk_changes:
-                        change_entry = {
-                            "chunk_index": chunk_index,
-                            "record_index": change.get("record_index"),
-                            "field": change.get("field"),
-                            "original_value": change.get("original_value"),
-                            "cleaned_value": change.get("cleaned_value"),
-                            "reason": change.get("reason"),
-                            "confidence": change.get("confidence", "high"),
-                            "timestamp": datetime.now().isoformat()
-                        }
-                        all_changes.append(change_entry)
+                    # Parse cleaned data
+                    if isinstance(cleaned_data, str) and cleaned_data.strip():
+
+                        # Convert CSV string back to records using pandas for proper CSV parsing
+                        try:
+                            # Use pandas to parse CSV properly (handles quotes, commas in fields)
+                            import io
+                            csv_buffer = io.StringIO(cleaned_data.strip())
+                            parsed_df = pd.read_csv(csv_buffer)
+                            
+                            # Convert DataFrame to list of dictionaries
+                            for _, row in parsed_df.iterrows():
+                                record = row.to_dict()
+                                all_cleaned_records.append(record)
+                                
+                        except Exception as parse_error:
+                            logger.warning(f"Pandas CSV parsing failed, falling back to simple parsing: {parse_error}")
+                            # Fallback to simple parsing
+                            lines = cleaned_data.strip().split('\n')
+                            if len(lines) > 1:  # Has header and data
+                                headers = [h.strip().strip('"') for h in lines[0].split(',')]
+                                for line in lines[1:]:
+                                    # Simple CSV parsing (handles basic cases)
+                                    values = [v.strip().strip('"') for v in line.split(',')]
+                                    if len(values) == len(headers):
+                                        record = dict(zip(headers, values))
+                                        all_cleaned_records.append(record)
+                    elif isinstance(cleaned_data, list):
+                        # Already in record format
+                        all_cleaned_records.extend(cleaned_data)
             
-            return {
-                "metadata": {
-                    "generated_at": datetime.now().isoformat(),
-                    "total_changes": len(all_changes),
-                    "chunks_processed": processing_results.get("successful_chunks", 0),
-                    "processing_time": processing_results.get("processing_time_seconds", 0)
-                },
-                "change_summary": self._summarize_changes(all_changes),
-                "detailed_changes": all_changes
-            }
+            # Log the number of records found
+            logger.info(f"Parsed {len(all_cleaned_records)} records from LLM response")
+            
+            # Validate record count against expected total
+            expected_total = metadata.get("file_info", {}).get("total_records", 0)
+            if expected_total > 0 and len(all_cleaned_records) != expected_total:
+                logger.warning(f"FINAL RECORD COUNT MISMATCH: Expected {expected_total} records, got {len(all_cleaned_records)} records")
+                logger.warning("Some records may have been dropped during the cleaning process")
+            
+            if not all_cleaned_records:
+                # No successful cleaning - return original data if available
+                logger.warning("No cleaned data available, attempting to return original data")
+                return await self._generate_fallback_csv(file_path, metadata)
+            
+            # Convert to DataFrame and save as CSV
+            df = pd.DataFrame(all_cleaned_records)
+            
+            # Save as CSV
+            df.to_csv(file_path, index=False, encoding='utf-8')
+            
+            logger.info(f"Generated cleaned CSV: {file_path} ({len(all_cleaned_records)} records)")
+            return file_path
+            
         except Exception as e:
-            logger.warning(f"Error extracting change log data: {e}")
-            return {"metadata": {"error": str(e)}, "change_summary": {}, "detailed_changes": []}
+            logger.error(f"Error generating cleaned CSV: {str(e)}")
+            # Try to generate fallback CSV
+            return await self._generate_fallback_csv(file_path, metadata)
     
-    def _summarize_changes(self, changes: List[Dict[str, Any]]) -> Dict[str, Any]:
-        """
-        Create summary statistics from change log.
-        
-        Args:
-            changes: List of change entries
+    async def _generate_fallback_csv(
+        self, 
+        file_path: str, 
+        metadata: Dict[str, Any]
+    ) -> str:
+        """Generate a fallback CSV file when cleaning fails."""
+        try:
+            # Create a simple message file
+            fallback_content = "# CLEANING FAILED\n"
+            fallback_content += f"# Original file: {metadata.get('file_info', {}).get('file_path', 'Unknown')}\n"
+            fallback_content += f"# Session: {metadata.get('session_id', 'Unknown')}\n"
+            fallback_content += "# No cleaned data could be generated\n"
+            fallback_content += "# Please check the error logs and data changes report\n"
             
-        Returns:
-            Change summary statistics
-        """
-        if not changes:
-            return {"total_changes": 0}
-        
-        # Group changes by field
-        field_changes = {}
-        reason_counts = {}
-        confidence_distribution = {"high": 0, "medium": 0, "low": 0}
-        
-        for change in changes:
-            field = change.get("field", "unknown")
-            reason = change.get("reason", "unspecified")
-            confidence = change.get("confidence", "high")
+            with open(file_path, 'w', encoding='utf-8') as f:
+                f.write(fallback_content)
             
-            field_changes[field] = field_changes.get(field, 0) + 1
-            reason_counts[reason] = reason_counts.get(reason, 0) + 1
+            logger.warning(f"Generated fallback file: {file_path}")
+            return file_path
             
-            if confidence in confidence_distribution:
-                confidence_distribution[confidence] += 1
-        
-        return {
-            "total_changes": len(changes),
-            "changes_by_field": field_changes,
-            "changes_by_reason": reason_counts,
-            "confidence_distribution": confidence_distribution,
-            "most_changed_field": max(field_changes, key=field_changes.get) if field_changes else None,
-            "most_common_reason": max(reason_counts, key=reason_counts.get) if reason_counts else None
-        }
+        except Exception as e:
+            logger.error(f"Error generating fallback CSV: {str(e)}")
+            raise
+    
+

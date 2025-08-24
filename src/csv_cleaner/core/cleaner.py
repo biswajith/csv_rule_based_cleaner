@@ -12,7 +12,7 @@ import json
 from .csv_reader import CSVReader
 from .llm_client import LLMClient
 from .rule_manager import RuleManager
-from .validation_manager import ValidationManager
+
 from ..processors.chunk_processor import ChunkProcessor
 from ..processors.parallel_processor import ParallelProcessor
 from ..processors.change_tracker import ChangeTracker, ChangeType, ConfidenceLevel
@@ -46,9 +46,6 @@ class CSVCleaner:
         self.validation_reporter = ValidationReporter(self.session_id)
         self.performance_monitor = PerformanceMonitor(self.session_id)
         self.memory_optimizer = MemoryOptimizer()
-        
-        # Centralized validation manager
-        self.validation_manager = ValidationManager(self.llm_client)
         
         self.cleaning_results: Dict[str, Any] = {}
         
@@ -99,13 +96,8 @@ class CSVCleaner:
                     file_info.get("file_size_mb", 0)
                 )
             
-                # Step 2: Analyze data quality via LLM
-                logger.info("Step 2: Analyzing data quality via LLM")
-                async with self.performance_monitor.profile_operation("quality_analysis"):
-                    quality_analysis = await self.llm_client.analyze_data_quality(sample_data)
-            
-                # Step 3: Initialize and expand user rules (centralized)
-                logger.info("Step 3: Initializing and expanding user rules")
+                # Step 2: Initialize and expand user rules (centralized)
+                logger.info("Step 2: Initializing and expanding user rules")
                 async with self.performance_monitor.profile_operation("rule_expansion"):
                     rule_initialization = await self.rule_manager.initialize_rules(
                         user_rules,
@@ -122,8 +114,8 @@ class CSVCleaner:
             
             expanded_rules = self.rule_manager.get_expanded_rules()
             
-            # Step 4: Create and process chunks with optimization
-            logger.info("Step 4: Creating data chunks for processing")
+            # Step 3: Create and process chunks with optimization
+            logger.info("Step 3: Creating data chunks for processing")
             async with self.performance_monitor.profile_operation("chunk_creation"):
                 # Optimize chunk size based on memory
                 estimated_record_size = file_info.get("memory_usage_mb", 10) * 1024 * 1024 / max(file_info.get("total_records", 1), 1)
@@ -136,7 +128,7 @@ class CSVCleaner:
                 
                 logger.info(f"Created {len(chunks)} chunks with optimized size: {optimal_chunk_size}")
         
-            logger.info("Step 5: Processing chunks via LLM")
+            logger.info("Step 4: Processing chunks via LLM")
             async with self.performance_monitor.profile_operation("chunk_processing", {"chunk_count": len(chunks)}):
                 with self.memory_optimizer.memory_limit_context("chunk_processing"):
                     processing_results = await self.chunk_processor.process_all_chunks(
@@ -150,23 +142,29 @@ class CSVCleaner:
                         self.performance_monitor.record_chunk_processing_metrics(
                             len(chunk_df), processing_time, success
                         )
+                    
+                    # Track changes from processing results
+                    logger.info("Tracking changes from processing results")
+                    for result in processing_results.get("results", []):
+                        if result.get("status") == "success":
+                            changes = result.get("changes", [])
+                            chunk_index = result.get("chunk_index", 0)
+                            chunk_info = result.get("chunk_info", {})
+                            
+                            if changes:
+                                # Track changes for this chunk
+                                self.change_tracker.track_chunk_processing(
+                                    chunk_index=chunk_index,
+                                    chunk_changes=changes,
+                                    processing_stage="llm_cleaning",
+                                    chunk_metadata=chunk_info
+                                )
+                                logger.info(f"Tracked {len(changes)} changes from chunk {chunk_index}")
+                            else:
+                                logger.debug(f"No changes tracked for chunk {chunk_index}")
             
-            # Step 6: Enhanced specialized processing with new validators
-            logger.info("Step 6: Performing comprehensive specialized validations")
-            
-            successful_results = self.chunk_processor.get_successful_results()
-            
-            # Comprehensive validation (replaces separate phone, geo, cross-field validation)
-            logger.info("Step 6: Performing comprehensive validation")
-            comprehensive_validation = await self.validation_manager.validate_comprehensive(
-                data_records=sample_data.get("sample_data", []),
-                column_headers=self.csv_reader.column_headers,
-                user_rules=self.rule_manager.get_original_rules()
-            )
-            self.validation_reporter.add_validation_results("comprehensive_validation", comprehensive_validation)
-            
-            # Step 7: Generate comprehensive output with enhanced reporting
-            logger.info("Step 7: Generating comprehensive output files and reports")
+            # Step 5: Generate comprehensive output files and reports
+            logger.info("Step 5: Generating comprehensive output files and reports")
             output_path = output_path or self._generate_output_path(file_path)
             
             # Generate comprehensive validation report
@@ -194,9 +192,7 @@ class CSVCleaner:
                 output_path,
                 {
                     "file_info": file_info,
-                    "quality_analysis": quality_analysis,
                     "rule_initialization": rule_initialization,
-                    "comprehensive_validation": comprehensive_validation,
                     "validation_report": validation_report,
                     "change_tracker": self.change_tracker.generate_change_report(),
                     "error_report": self.error_handler.get_error_report(),
@@ -227,15 +223,12 @@ class CSVCleaner:
                         "success_rate": processing_results.get("success_rate", 0),
                         "total_changes": processing_results.get("total_changes_made", 0)
                     },
-                    "quality_analysis": quality_analysis,
                     "rule_processing": {
                         "original_rules": self.rule_manager.get_original_rules(),
                         "expanded_rules": expanded_rules,
                         "expansion_status": rule_initialization.get("status")
                     },
-                    "specialized_processing": {
-                        "comprehensive_validation": comprehensive_validation
-                    },
+                    "specialized_processing": {},
                     "validation_report": validation_report,
                     "change_summary": self.change_tracker.get_change_statistics(),
                     "error_summary": self.error_handler.get_error_statistics(),

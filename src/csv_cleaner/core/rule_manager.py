@@ -41,7 +41,25 @@ class RuleManager:
         """
         try:
             # Step 1: Load/parse rules
-            self.original_rules = self._load_rules(rules_source)
+            rules_to_check = self._load_rules(rules_source)
+            
+            # Check if rules are already expanded and match current request
+            if (self.is_expanded and 
+                self.original_rules == rules_to_check and 
+                self.column_headers == column_headers):
+                logger.info("Using cached expanded rules (no LLM call needed)")
+                return {
+                    "status": "success",
+                    "original_rules": self.original_rules,
+                    "expanded_rules": self.expanded_rules,
+                    "rule_count": len(self.original_rules),
+                    "column_headers": column_headers
+                }
+            
+
+            
+            # Rules have changed or not yet expanded, proceed with expansion
+            self.original_rules = rules_to_check
             self.column_headers = column_headers
             
             if not self.original_rules:

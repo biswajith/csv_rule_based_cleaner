@@ -100,7 +100,7 @@ async def main():
         
         # Full cleaning
         logger.info("Starting full CSV cleaning...")
-        results = await processor.process_file(example_file, example_rules)
+        results = await processor.process_file(example_file, rules_source)
         
         if results.get("status") == "completed":
             logger.info("CSV cleaning completed successfully")

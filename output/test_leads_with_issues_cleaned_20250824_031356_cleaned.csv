@@ -1,0 +1,51 @@
+first_name,last_name,email,phone,company,address,city,state,zip_code,job_title,change_log
+John,Smith,john.smith@invalid,(555) 123-4,Tech Corp,123 Main St,Miami,CA,90210,Software Engineer,['Invalid phone number length']
+Sarah,Johnson,sarah.johnson@.com,(123) 456-7890,Data Inc,456 Oak Ave,Austin,NY,73301,Data Analyst,['Invalid email format']
+Michael,Brown,michael@brown,(555) 987-6543,Cloud Systems,789 Pine St,Denver,FL,80201,Cloud Architect,['geographic_error']
+Emily,Davis,emily.davis@email.com,(555) ABC-1234,AI Solutions,321 Elm St,Seattle,TX,98101,ML Engineer,['Invalid phone number characters']
+David,Wilson,david.wilson@,(987) 654-3210,FinTech Ltd,654 Maple Dr,Boston,CA,2101,Product Manager,"['Invalid email format', 'Invalid zip_code']"
+Lisa,Garcia,lisa.garcia@invalid.com,(555) 123-4,Marketing Plus,987 Cedar Ln,Phoenix,NY,85001,Marketing Director,['geographic_error']
+James,Rodriguez,james@rodriguez@email,(123) 45-,Sales Force,147 Birch St,Las Vegas,FL,89101,Sales Manager,['Invalid phone number length']
+Jennifer,Martinez,jennifer.martinez@,(555) 123-4,HR Services,258 Walnut Ave,Portland,TX,97201,HR Specialist,['Invalid email format']
+Robert,Anderson,robert.anderson@invalid@,(555) 12-34-56,Legal Advisors,369 Cherry St,Nashville,CA,37201,Legal Counsel,['Invalid email format']
+Maria,Taylor,maria.taylor@..com,(555) PHONE,Consulting Group,741 Spruce Dr,Orlando,NY,32801,Business Consultant,"['Invalid email format', 'Invalid phone number characters']"
+Christopher,Thomas,chris@thomas@email,(555) 123-ABCD,Design Studio,852 Poplar St,San Diego,FL,92101,UX Designer,"['Invalid email format', 'Invalid phone number characters']"
+Amanda,Jackson,amanda.jackson@invalid@email,(555) ABC.DEFG,E-commerce Co,963 Willow Ln,Salt Lake City,TX,84101,E-commerce Manager,"['Invalid email format', 'Invalid phone number characters']"
+Mark,White,mark.white@,(1) 555-123-ABCD,Security Firm,159 Ash St,Memphis,CA,38101,Security Analyst,"['Invalid email format', 'Invalid phone number length']"
+Jessica,Harris,jessica.harris@@invalid.com,(555) 123-4-567X,Health Tech,357 Magnolia Dr,Louisville,NY,40201,Health Informatics,"['Invalid email format', 'Invalid phone number characters']"
+Andrew,Martin,andrew@martin@email@com,(555) 123.ABC4,Logistics Inc,468 Hickory Ave,Milwaukee,FL,53201,Supply Chain Manager,"['Invalid email format', 'Invalid phone number characters']"
+Michelle,Thompson,michelle.thompson@invalid.,(555) CALL-NOW,Energy Solutions,579 Dogwood St,Albuquerque,TX,87101,Energy Analyst,"['Invalid email format', 'Invalid phone number characters']"
+Kevin,García,kevin.garcia@..invalid,(123) 456-ABCD,Real Estate Pro,681 Sycamore Dr,Tucson,CA,85701,Real Estate Agent,"['Invalid email format', 'Invalid phone number characters']"
+Laura,Clark,laura.clark@email@invalid,(555) NO.PHONE,Insurance Plus,792 Redwood Ln,Fresno,NY,93701,Insurance Agent,"['Invalid email format', 'Invalid phone number characters']"
+Steven,Lewis,steven@lewis@@com,(555) 1234-CALL,Transport Co,814 Cypress St,Sacramento,FL,95814,Transport Manager,"['Invalid email format', 'Invalid phone number characters']"
+Nicole,Lee,nicole.lee@invalid@email.com,(555) DIAL.ME,Retail Chain,925 Juniper Ave,Kansas City,TX,64101,Retail Manager,['Invalid phone number characters']
+Brian,Walker,brian.walker@,(555) HELP-NOW,Banking Corp,147 Hemlock Dr,Oklahoma City,CA,73101,Bank Manager,"['Invalid email format', 'Invalid phone number characters']"
+Stephanie,Hall,stephanie.hall@@email.invalid,(555) ASK.HELP,Publishing House,258 Fir St,Atlanta,NY,30301,Editor,['Invalid email format']
+Ryan,Allen,ryan@allen@invalid@,(123) CALL-555,Manufacturing Inc,369 Redcedar Ln,Raleigh,FL,27601,Operations Manager,"['Invalid email format', 'Invalid phone number characters']"
+Rebecca,Young,rebecca.young@invalid..email,(555) INFO-CALL,Telecom Services,741 Blackgum Dr,Virginia Beach,TX,23451,Network Engineer,"['Invalid email format', 'Invalid phone number characters']"
+Jonathan,Hernandez,jonathan@hernandez@email,(555) NEED.HELP,Agriculture Co,852 Sweetgum St,Colorado Springs,CA,80901,Agricultural Scientist,[]
+Samantha,King,samantha.king@,(555) DIAL-INFO,Pharmaceutical Inc,963 Basswood Ave,Omaha,NY,68101,Pharmaceutical Researcher,['Invalid email format']
+Timothy,Wright,timothy.wright@@invalid,(555) CALL.NOW,Architecture Firm,159 Cottonwood Dr,Miami,FL,33101,Architect,['Invalid email format']
+Ashley,Lopez,ashley@lopez@email@invalid,(123) HELP-555,Event Planning,357 Beech St,Tulsa,TX,74101,Event Coordinator,['Invalid email format']
+Joseph,Hill,joseph.hill@invalid.,(555) NEED-INFO,Construction Co,468 Maple Ln,Minneapolis,CA,55401,Project Manager,['Invalid email format']
+Megan,Scott,megan.scott@..email,(555) DIAL.HELP,Food Service,579 Elm Dr,Wichita,NY,67201,Restaurant Manager,['Invalid email format']
+Daniel,Green,daniel@green@@invalid.com,(555) CALL-HELP,Fashion Brand,681 Oak St,New Orleans,FL,70112,Fashion Designer,"['Invalid email format', 'Invalid phone number characters']"
+Rachel,Adams,rachel.adams@invalid@,(555) INFO.DIAL,Travel Agency,792 Pine Ave,Honolulu,TX,96801,Travel Coordinator,['Invalid email format']
+Matthew,Baker,matthew.baker@,(123) DIAL-555,Sports Management,814 Cedar Dr,Cleveland,CA,44101,Sports Agent,['Invalid email format']
+Kimberly,Gonzalez,kimberly@gonzalez@email,(555) HELP-DIAL,Education Services,925 Birch Ln,Tampa,NY,33601,Education Director,['Invalid email format']
+Anthony,Nelson,anthony.nelson@@invalid,(555) CALL.INFO,Non-Profit Org,147 Walnut St,Aurora,FL,80010,Program Director,['Invalid email format']
+Elizabeth,Carter,elizabeth.carter@invalid.,(555) INFO-HELP,Government Agency,258 Cherry Dr,Anaheim,TX,92801,Policy Analyst,['Invalid email format']
+Charles,Mitchell,charles@mitchell@email@,(555) HELP.CALL,Media Company,369 Spruce Ave,Santa Ana,CA,92701,Media Producer,['Invalid email format']
+Melissa,Perez,melissa.perez@..invalid,(123) INFO-555,Research Institute,741 Poplar St,St. Louis,NY,63101,Research Scientist,['Invalid email format']
+Jason,Roberts,jason.roberts@invalid@email,(555) DIAL-HELP,Gaming Studio,852 Willow Dr,Riverside,FL,92501,Game Developer,['Invalid email format']
+Amanda,Turner,amanda@turner@@invalid.com,(555) NEED.DIAL,Wellness Center,963 Ash Ln,Corpus Christi,TX,78401,Wellness Coach,['Invalid email format']
+Justin,Phillips,justin.phillips@,(555) CALL-INFO,Automotive Co,159 Magnolia Ave,Lexington,CA,40502,Automotive Engineer,['Invalid email format']
+Heather,Campbell,heather.campbell@@email,(555) HELP.INFO,Social Media Agency,357 Hickory St,Pittsburgh,NY,15201,Social Media Manager,['Invalid email format']
+Brandon,Parker,brandon@parker@invalid@,(123) NEED-555,Cybersecurity Firm,468 Dogwood Dr,Anchorage,FL,99501,Cybersecurity Specialist,['Invalid email format']
+Danielle,Evans,danielle.evans@invalid.,(555) INFO-NEED,Interior Design,579 Sycamore Ln,Cincinnati,TX,45201,Interior Designer,['Invalid email format']
+Gregory,Edwards,gregory@edwards@@email.com,(555) DIAL.NEED,Environmental Consulting,681 Redwood Ave,Newark,NJ,94560,Environmental Scientist,['Invalid email format']
+Kayla,Collins,kayla.collins@..invalid,(555) HELP-INFO,Photography Studio,792 Cypress St,Jersey City,NY,7302,Photographer,"['Invalid email format', 'Invalid zip_code']"
+Adam,Stewart,adam.stewart@invalid@,(555) CALL.HELP,Music Production,814 Juniper Dr,Buffalo,FL,14201,Music Producer,['Invalid email format']
+Christina,Sanchez,christina@sanchez@email,(123) DIAL-INFO,Beauty Products,925 Hemlock Ln,Rochester,TX,14602,Brand Manager,['Invalid email format']
+Eric,Morris,eric.morris@invalid.,(555) NEED-CALL,Video Production,147 Fir Ave,Toledo,CA,43601,Video Editor,['Invalid email format']
+Natalie,Rogers,natalie@rogers@@invalid,(555) INFO-HELP,Pet Services,258 Redcedar St,Plano,NY,75023,Veterinarian,['Invalid email format']

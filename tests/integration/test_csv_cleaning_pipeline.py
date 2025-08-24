@@ -116,10 +116,7 @@ class TestCSVCleaningPipeline:
                 "changes": []
             }
             
-            mock_llm.analyze_data_quality.return_value = {
-                "status": "success",
-                "quality_analysis": mock_llm_responses["quality_analysis"]
-            }
+
             
             # Test the pipeline
             cleaner = CSVCleaner()
@@ -146,7 +143,7 @@ class TestCSVCleaningPipeline:
                 
                 # Verify LLM interactions
                 assert mock_llm.expand_rules.called
-                assert mock_llm.analyze_data_quality.called
+
     
     @pytest.mark.asyncio
     async def test_data_processor_interface(self, temp_csv_file):
@@ -157,7 +154,7 @@ class TestCSVCleaningPipeline:
             
             # Configure basic mock responses
             mock_llm.expand_rules.return_value = {"status": "success", "expanded_rules": "test rules"}
-            mock_llm.analyze_data_quality.return_value = {"status": "success", "quality_analysis": "good"}
+
             mock_llm.clean_data_chunk.return_value = {"status": "success", "cleaned_data": [], "changes": []}
             
             processor = DataProcessor()
@@ -254,7 +251,7 @@ class TestCSVCleaningPipeline:
                 
                 # Configure mock responses
                 mock_llm.expand_rules.return_value = {"status": "success", "expanded_rules": "chunk test rules"}
-                mock_llm.analyze_data_quality.return_value = {"status": "success", "quality_analysis": "good"}
+    
                 mock_llm.clean_data_chunk.return_value = {"status": "success", "cleaned_data": [], "changes": []}
                 
                 # Set small chunk size for testing
@@ -307,7 +304,7 @@ class TestCSVCleaningPipeline:
             
             # Configure mock responses for validators
             mock_llm.expand_rules.return_value = {"status": "success", "expanded_rules": "validator rules"}
-            mock_llm.analyze_data_quality.return_value = {"status": "success", "quality_analysis": "good"}
+
             mock_llm.clean_data_chunk.return_value = {"status": "success", "cleaned_data": [], "changes": []}
             
             # Mock ValidationManager response
@@ -328,14 +325,10 @@ class TestCSVCleaningPipeline:
                 
                 results = await cleaner.clean_csv(temp_csv_file, rules)
                 
-                # Verify specialized validators were called
-                assert mock_phone_instance.process_phone_data_comprehensive.called
-                assert mock_geo_instance.process_geographical_data_comprehensive.called
-                assert mock_cross_instance.process_cross_field_validation_comprehensive.called
+                # Verify comprehensive validation was called
+                assert mock_validation_instance.validate_comprehensive.called
                 
                 # Verify results include specialized processing
                 assert "specialized_processing" in results
                 specialized = results["specialized_processing"]
-                assert "phone_validation" in specialized
-                assert "geographical_validation" in specialized
-                assert "cross_field_validation" in specialized
+                assert "comprehensive_validation" in specialized

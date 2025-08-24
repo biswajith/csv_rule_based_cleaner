@@ -1,0 +1,51 @@
+first_name,last_name,email,phone,company,address,city,state,zip_code,job_title
+John,Smith,john.smith@invalid,555-1234,Tech Corp,123 Main St,Miami,CA,90210,Software Engineer
+Sarah,Johnson,sarah.johnson@.com,1234567890,Data Inc,456 Oak Ave,Austin,NY,73301,Data Analyst
+Michael,Brown,michael@brown,555.987.6543,Cloud Systems,789 Pine St,Denver,FL,80201,Cloud Architect
+Emily,Davis,emily.davis@@email.com,555-ABCD-1234,AI Solutions,321 Elm St,Seattle,TX,98101,ML Engineer
+David,Wilson,david.wilson@,9876543210,FinTech Ltd,654 Maple Dr,Boston,CA,02101,Product Manager
+Lisa,Garcia,lisa.garcia@invalid..com,555-1234-ABCD,Marketing Plus,987 Cedar Ln,Phoenix,NY,85001,Marketing Director
+James,Rodriguez,james@rodriguez@email,12345,Sales Force,147 Birch St,Las Vegas,FL,89101,Sales Manager
+Jennifer,Martinez,jennifer.martinez@,555.1234.5678,HR Services,258 Walnut Ave,Portland,TX,97201,HR Specialist
+Robert,Anderson,robert.anderson@invalid@,555-12-34-56,Legal Advisors,369 Cherry St,Nashville,CA,37201,Legal Counsel
+Maria,Taylor,maria.taylor@..com,555PHONE,Consulting Group,741 Spruce Dr,Orlando,NY,32801,Business Consultant
+Christopher,Thomas,chris@thomas@@email,(555) 123-ABCD,Design Studio,852 Poplar St,San Diego,FL,92101,UX Designer
+Amanda,Jackson,amanda.jackson@invalid@email,555.ABC.DEFG,E-commerce Co,963 Willow Ln,Salt Lake City,TX,84101,E-commerce Manager
+Mark,White,mark.white@,1-555-123-ABCD,Security Firm,159 Ash St,Memphis,CA,38101,Security Analyst
+Jessica,Harris,jessica.harris@@invalid.com,555-1234-567X,Health Tech,357 Magnolia Dr,Louisville,NY,40201,Health Informatics
+Andrew,Martin,andrew@martin@email@com,555.123.ABC4,Logistics Inc,468 Hickory Ave,Milwaukee,FL,53201,Supply Chain Manager
+Michelle,Thompson,michelle.thompson@invalid.,555-CALL-NOW,Energy Solutions,579 Dogwood St,Albuquerque,TX,87101,Energy Analyst
+Kevin,Garcia,kevin.garcia@..invalid,123-456-ABCD,Real Estate Pro,681 Sycamore Dr,Tucson,CA,85701,Real Estate Agent
+Laura,Clark,laura.clark@email@invalid,555.NO.PHONE,Insurance Plus,792 Redwood Ln,Fresno,NY,93701,Insurance Agent
+Steven,Lewis,steven@lewis@@com,555-1234-CALL,Transport Co,814 Cypress St,Sacramento,FL,95814,Transport Manager
+Nicole,Lee,nicole.lee@invalid@email.com,555.DIAL.ME,Retail Chain,925 Juniper Ave,Kansas City,TX,64101,Retail Manager
+Brian,Walker,brian.walker@,555-HELP-NOW,Banking Corp,147 Hemlock Dr,Oklahoma City,CA,73101,Bank Manager
+Stephanie,Hall,stephanie.hall@@email.invalid,555.ASK.HELP,Publishing House,258 Fir St,Atlanta,NY,30301,Editor
+Ryan,Allen,ryan@allen@invalid@,123-CALL-555,Manufacturing Inc,369 Redcedar Ln,Raleigh,FL,27601,Operations Manager
+Rebecca,Young,rebecca.young@invalid..email,555-INFO-CALL,Telecom Services,741 Blackgum Dr,Virginia Beach,TX,23451,Network Engineer
+Jonathan,Hernandez,jonathan@hernandez@email,555.NEED.HELP,Agriculture Co,852 Sweetgum St,Colorado Springs,CA,80901,Agricultural Scientist
+Samantha,King,samantha.king@,555-DIAL-INFO,Pharmaceutical Inc,963 Basswood Ave,Omaha,NY,68101,Pharmaceutical Researcher
+Timothy,Wright,timothy.wright@@invalid,555.CALL.NOW,Architecture Firm,159 Cottonwood Dr,Miami,FL,33101,Architect
+Ashley,Lopez,ashley@lopez@email@invalid,123-HELP-555,Event Planning,357 Beech St,Tulsa,TX,74101,Event Coordinator
+Joseph,Hill,joseph.hill@invalid.,555-NEED-INFO,Construction Co,468 Maple Ln,Minneapolis,CA,55401,Project Manager
+Megan,Scott,megan.scott@..email,555.DIAL.HELP,Food Service,579 Elm Dr,Wichita,NY,67201,Restaurant Manager
+Daniel,Green,daniel@green@@invalid.com,555-CALL-HELP,Fashion Brand,681 Oak St,New Orleans,FL,70112,Fashion Designer
+Rachel,Adams,rachel.adams@invalid@,555.INFO.DIAL,Travel Agency,792 Pine Ave,Honolulu,TX,96801,Travel Coordinator
+Matthew,Baker,matthew.baker@,123-DIAL-555,Sports Management,814 Cedar Dr,Cleveland,CA,44101,Sports Agent
+Kimberly,Gonzalez,kimberly@gonzalez@email,555-HELP-DIAL,Education Services,925 Birch Ln,Tampa,NY,33601,Education Director
+Anthony,Nelson,anthony.nelson@@invalid,555.CALL.INFO,Non-Profit Org,147 Walnut St,Aurora,FL,80010,Program Director
+Elizabeth,Carter,elizabeth.carter@invalid.,555-INFO-HELP,Government Agency,258 Cherry Dr,Anaheim,TX,92801,Policy Analyst
+Charles,Mitchell,charles@mitchell@email@,555.HELP.CALL,Media Company,369 Spruce Ave,Santa Ana,CA,92701,Media Producer
+Melissa,Perez,melissa.perez@..invalid,123-INFO-555,Research Institute,741 Poplar St,St. Louis,NY,63101,Research Scientist
+Jason,Roberts,jason.roberts@invalid@email,555-DIAL-HELP,Gaming Studio,852 Willow Dr,Riverside,FL,92501,Game Developer
+Amanda,Turner,amanda@turner@@invalid.com,555.NEED.DIAL,Wellness Center,963 Ash Ln,Corpus Christi,TX,78401,Wellness Coach
+Justin,Phillips,justin.phillips@,555-CALL-INFO,Automotive Co,159 Magnolia Ave,Lexington,CA,40502,Automotive Engineer
+Heather,Campbell,heather.campbell@@email,555.HELP.INFO,Social Media Agency,357 Hickory St,Pittsburgh,NY,15201,Social Media Manager
+Brandon,Parker,brandon@parker@invalid@,123-NEED-555,Cybersecurity Firm,468 Dogwood Dr,Anchorage,FL,99501,Cybersecurity Specialist
+Danielle,Evans,danielle.evans@invalid.,555-INFO-NEED,Interior Design,579 Sycamore Ln,Cincinnati,TX,45201,Interior Designer
+Gregory,Edwards,gregory@edwards@@email.com,555.DIAL.NEED,Environmental Consulting,681 Redwood Ave,Newark,New Jersey,94560,Environmental Scientist
+Kayla,Collins,kayla.collins@..invalid,555-HELP-INFO,Photography Studio,792 Cypress St,Jersey City,NY,07302,Photographer
+Adam,Stewart,adam.stewart@invalid@,555.CALL.HELP,Music Production,814 Juniper Dr,Buffalo,FL,14201,Music Producer
+Christina,Sanchez,christina@sanchez@email,123-DIAL-INFO,Beauty Products,925 Hemlock Ln,Rochester,TX,14602,Brand Manager
+Eric,Morris,eric.morris@invalid.,555-NEED-CALL,Video Production,147 Fir Ave,Toledo,CA,43601,Video Editor
+Natalie,Rogers,natalie@rogers@@invalid,555.INFO.HELP,Pet Services,258 Redcedar St,Plano,NY,75023,Veterinarian

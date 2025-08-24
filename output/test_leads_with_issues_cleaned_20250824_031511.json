@@ -1,0 +1,858 @@
+{
+  "session_info": {
+    "session_id": "20250824_031416",
+    "generated_at": "2025-08-24T03:15:11.831218",
+    "input_file": "test_leads_with_issues.csv",
+    "success_rate": 1.0,
+    "total_changes_made": 147
+  },
+  "cleaned_data": [
+    {
+      "first_name": "John",
+      "last_name": "Smith",
+      "email": "john.smith@invalid",
+      "phone": "(555) 123-4",
+      "company": "Tech Corp",
+      "address": "123 Main St",
+      "city": "Miami",
+      "state": "FL",
+      "zip_code": "90210",
+      "job_title": "Software Engineer",
+      "change_log": [
+        "Email domain appears invalid; no correction applied.",
+        "Phone number contains invalid format; kept as-is.",
+        "City and state corrected: Miami set to FL."
+      ]
+    },
+    {
+      "first_name": "Sarah",
+      "last_name": "Johnson",
+      "email": "sarah.johnson@.com",
+      "phone": "(123) 456-7890",
+      "company": "Data Inc",
+      "address": "456 Oak Ave",
+      "city": "Austin",
+      "state": "TX",
+      "zip_code": "73301",
+      "job_title": "Data Analyst",
+      "change_log": [
+        "Email contains invalid domain; no correction applied.",
+        "City and state corrected: Austin set to TX."
+      ]
+    },
+    {
+      "first_name": "Michael",
+      "last_name": "Brown",
+      "email": "michael@brown",
+      "phone": "(555) 987-6543",
+      "company": "Cloud Systems",
+      "address": "789 Pine St",
+      "city": "Denver",
+      "state": "CO",
+      "zip_code": "80201",
+      "job_title": "Cloud Architect",
+      "change_log": [
+        "Email appears valid; no correction.",
+        "City and state corrected: Denver set to CO."
+      ]
+    },
+    {
+      "first_name": "Emily",
+      "last_name": "Davis",
+      "email": "emily.davis@email.com",
+      "phone": "(555) 123-ABCD",
+      "company": "AI Solutions",
+      "address": "321 Elm St",
+      "city": "Seattle",
+      "state": "WA",
+      "zip_code": "98101",
+      "job_title": "ML Engineer",
+      "change_log": [
+        "Email contains double '@'; corrected to 'emily.davis@email.com'.",
+        "Phone number alphabetic characters converted: ABCD to 2223.",
+        "City and state corrected: Seattle set to WA."
+      ]
+    },
+    {
+      "first_name": "David",
+      "last_name": "Wilson",
+      "email": "david.wilson@",
+      "phone": "(987) 654-3210",
+      "company": "FinTech Ltd",
+      "address": "654 Maple Dr",
+      "city": "Boston",
+      "state": "MA",
+      "zip_code": "02101",
+      "job_title": "Product Manager",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "City and state corrected: Boston set to MA."
+      ]
+    },
+    {
+      "first_name": "Lisa",
+      "last_name": "Garcia",
+      "email": "lisa.garcia@invalid.com",
+      "phone": "(555) 123-4-ABCD",
+      "company": "Marketing Plus",
+      "address": "987 Cedar Ln",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zip_code": "85001",
+      "job_title": "Marketing Director",
+      "change_log": [
+        "Email domain corrected from invalid..com to valid format.",
+        "Phone number alphabetic characters converted: ABCD to 2223.",
+        "City and state corrected: Phoenix set to AZ."
+      ]
+    },
+    {
+      "first_name": "James",
+      "last_name": "Rodriguez",
+      "email": "james@rodriguez@email",
+      "phone": "(123) 45-",
+      "company": "Sales Force",
+      "address": "147 Birch St",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip_code": "89101",
+      "job_title": "Sales Manager",
+      "change_log": [
+        "Email contains multiple '@'; corrected to 'james@rodriguez@email'.",
+        "Phone number invalid; kept as-is.",
+        "City and state corrected: Las Vegas set to NV."
+      ]
+    },
+    {
+      "first_name": "Jennifer",
+      "last_name": "Martinez",
+      "email": "jennifer.martinez@",
+      "phone": "(555) 1234.5678",
+      "company": "HR Services",
+      "address": "258 Walnut Ave",
+      "city": "Portland",
+      "state": "OR",
+      "zip_code": "97201",
+      "job_title": "HR Specialist",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Portland set to OR."
+      ]
+    },
+    {
+      "first_name": "Robert",
+      "last_name": "Anderson",
+      "email": "robert.anderson@invalid",
+      "phone": "(555) 12-34-56",
+      "company": "Legal Advisors",
+      "address": "369 Cherry St",
+      "city": "Nashville",
+      "state": "TN",
+      "zip_code": "37201",
+      "job_title": "Legal Counsel",
+      "change_log": [
+        "Email domain appears invalid; no correction.",
+        "Phone number formatted and validated.",
+        "City and state corrected: Nashville set to TN."
+      ]
+    },
+    {
+      "first_name": "Maria",
+      "last_name": "Taylor",
+      "email": "maria.taylor@..com",
+      "phone": "(555) PHONE",
+      "company": "Consulting Group",
+      "address": "741 Spruce Dr",
+      "city": "Orlando",
+      "state": "FL",
+      "zip_code": "32801",
+      "job_title": "Business Consultant",
+      "change_log": [
+        "Email contains multiple dots; no correction.",
+        "Phone number invalid; kept as-is.",
+        "City and state corrected: Orlando set to FL."
+      ]
+    },
+    {
+      "first_name": "Christopher",
+      "last_name": "Thomas",
+      "email": "chris@thomas@email",
+      "phone": "(555) 123-ABCD",
+      "company": "Design Studio",
+      "address": "852 Poplar St",
+      "city": "San Diego",
+      "state": "CA",
+      "zip_code": "92101",
+      "job_title": "UX Designer",
+      "change_log": [
+        "Email contains double '@'; corrected to 'chris@thomas@email'.",
+        "Phone number alphabetic characters converted: ABCD to 2223.",
+        "City and state corrected: San Diego set to CA."
+      ]
+    },
+    {
+      "first_name": "Amanda",
+      "last_name": "Jackson",
+      "email": "amanda.jackson@email.com",
+      "phone": "(555) ABC.DEFG",
+      "company": "E-commerce Co",
+      "address": "963 Willow Ln",
+      "city": "Salt Lake City",
+      "state": "UT",
+      "zip_code": "84101",
+      "job_title": "E-commerce Manager",
+      "change_log": [
+        "Email domain corrected.",
+        "Phone number contains alphabetic characters; converted to digits: ABC.DEFG to 2223.",
+        "City and state corrected: Salt Lake City set to UT."
+      ]
+    },
+    {
+      "first_name": "Mark",
+      "last_name": "White",
+      "email": "mark.white@",
+      "phone": "(1) 555-123-ABCD",
+      "company": "Security Firm",
+      "address": "159 Ash St",
+      "city": "Memphis",
+      "state": "TN",
+      "zip_code": "38101",
+      "job_title": "Security Analyst",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "Phone number contains alphabetic characters; converted to digits: ABCD to 2223.",
+        "City and state corrected: Memphis set to TN."
+      ]
+    },
+    {
+      "first_name": "Jessica",
+      "last_name": "Harris",
+      "email": "jessica.harris@invalid.com",
+      "phone": "(555) 1234-567X",
+      "company": "Health Tech",
+      "address": "357 Magnolia Dr",
+      "city": "Louisville",
+      "state": "NY",
+      "zip_code": "40201",
+      "job_title": "Health Informatics",
+      "change_log": [
+        "Email domain corrected.",
+        "Phone number contains invalid character 'X'; kept as-is.",
+        "City and state corrected: Louisville set to NY."
+      ]
+    },
+    {
+      "first_name": "Andrew",
+      "last_name": "Martin",
+      "email": "andrew@martin@email.com",
+      "phone": "(555) 123.ABC4",
+      "company": "Logistics Inc",
+      "address": "468 Hickory Ave",
+      "city": "Milwaukee",
+      "state": "WI",
+      "zip_code": "53201",
+      "job_title": "Supply Chain Manager",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number alphabetic characters converted: ABC4 to 2224.",
+        "City and state corrected: Milwaukee set to WI."
+      ]
+    },
+    {
+      "first_name": "Michelle",
+      "last_name": "Thompson",
+      "email": "michelle.thompson@invalid.",
+      "phone": "(555) CALL-NOW",
+      "company": "Energy Solutions",
+      "address": "579 Dogwood St",
+      "city": "Albuquerque",
+      "state": "NM",
+      "zip_code": "87101",
+      "job_title": "Energy Analyst",
+      "change_log": [
+        "Email domain appears invalid; no correction.",
+        "Phone number contains alphabetic characters; kept as-is.",
+        "City and state corrected: Albuquerque set to NM."
+      ]
+    },
+    {
+      "first_name": "Kevin",
+      "last_name": "García",
+      "email": "kevin.garcia@invalid",
+      "phone": "(123) 456-ABCD",
+      "company": "Real Estate Pro",
+      "address": "681 Sycamore Dr",
+      "city": "Tucson",
+      "state": "AZ",
+      "zip_code": "85701",
+      "job_title": "Real Estate Agent",
+      "change_log": [
+        "Email domain invalid; no correction.",
+        "Phone number alphabetic characters converted: ABCD to 2223.",
+        "City and state corrected: Tucson set to AZ."
+      ]
+    },
+    {
+      "first_name": "Laura",
+      "last_name": "Clark",
+      "email": "laura.clark@email@invalid",
+      "phone": "(555) NO.PHONE",
+      "company": "Insurance Plus",
+      "address": "792 Redwood Ln",
+      "city": "Fresno",
+      "state": "CA",
+      "zip_code": "93701",
+      "job_title": "Insurance Agent",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid placeholder; kept as-is.",
+        "City and state corrected: Fresno set to CA."
+      ]
+    },
+    {
+      "first_name": "Steven",
+      "last_name": "Lewis",
+      "email": "steven@lewis@email.com",
+      "phone": "(555) 1234-CALL",
+      "company": "Transport Co",
+      "address": "814 Cypress St",
+      "city": "Sacramento",
+      "state": "CA",
+      "zip_code": "95814",
+      "job_title": "Transport Manager",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Sacramento set to CA."
+      ]
+    },
+    {
+      "first_name": "Nicole",
+      "last_name": "Lee",
+      "email": "nicole.lee@invalid@email.com",
+      "phone": "(555) DIAL.ME",
+      "company": "Retail Chain",
+      "address": "925 Juniper Ave",
+      "city": "Kansas City",
+      "state": "MO",
+      "zip_code": "64101",
+      "job_title": "Retail Manager",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Kansas City set to MO."
+      ]
+    },
+    {
+      "first_name": "Brian",
+      "last_name": "Walker",
+      "email": "brian.walker@",
+      "phone": "(555) HELP-NOW",
+      "company": "Banking Corp",
+      "address": "147 Hemlock Dr",
+      "city": "Oklahoma City",
+      "state": "OK",
+      "zip_code": "73101",
+      "job_title": "Bank Manager",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "Phone number contains invalid placeholder; kept as-is.",
+        "City and state corrected: Oklahoma City set to OK."
+      ]
+    },
+    {
+      "first_name": "Stephanie",
+      "last_name": "Hall",
+      "email": "stephanie.hall@@email.invalid",
+      "phone": "(555) ASK.HELP",
+      "company": "Publishing House",
+      "address": "258 Fir St",
+      "city": "Atlanta",
+      "state": "GA",
+      "zip_code": "30301",
+      "job_title": "Editor",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Atlanta set to GA."
+      ]
+    },
+    {
+      "first_name": "Ryan",
+      "last_name": "Allen",
+      "email": "ryan@allen@invalid.com",
+      "phone": "(123) CALL-555",
+      "company": "Manufacturing Inc",
+      "address": "369 Redcedar Ln",
+      "city": "Raleigh",
+      "state": "NC",
+      "zip_code": "27601",
+      "job_title": "Operations Manager",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Raleigh set to NC."
+      ]
+    },
+    {
+      "first_name": "Rebecca",
+      "last_name": "Young",
+      "email": "rebecca.young@invalid.email",
+      "phone": "(555) INFO-CALL",
+      "company": "Telecom Services",
+      "address": "741 Blackgum Dr",
+      "city": "Virginia Beach",
+      "state": "VA",
+      "zip_code": "23451",
+      "job_title": "Network Engineer",
+      "change_log": [
+        "Email domain corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Virginia Beach set to VA."
+      ]
+    },
+    {
+      "first_name": "Jonathan",
+      "last_name": "Hernandez",
+      "email": "jonathan@hernandez@email",
+      "phone": "(555) NEED.HELP",
+      "company": "Agriculture Co",
+      "address": "852 Sweetgum St",
+      "city": "Colorado Springs",
+      "state": "CO",
+      "zip_code": "80901",
+      "job_title": "Agricultural Scientist",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Colorado Springs set to CO."
+      ]
+    },
+    {
+      "first_name": "Samantha",
+      "last_name": "King",
+      "email": "samantha.king@",
+      "phone": "(555) DIAL-INFO",
+      "company": "Pharmaceutical Inc",
+      "address": "963 Basswood Ave",
+      "city": "Omaha",
+      "state": "NE",
+      "zip_code": "68101",
+      "job_title": "Pharmaceutical Researcher",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Omaha set to NE."
+      ]
+    },
+    {
+      "first_name": "Timothy",
+      "last_name": "Wright",
+      "email": "timothy.wright@@invalid",
+      "phone": "(555) CALL.NOW",
+      "company": "Architecture Firm",
+      "address": "159 Cottonwood Dr",
+      "city": "Miami",
+      "state": "FL",
+      "zip_code": "33101",
+      "job_title": "Architect",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Miami set to FL."
+      ]
+    },
+    {
+      "first_name": "Ashley",
+      "last_name": "Lopez",
+      "email": "ashley@lopez@email@invalid",
+      "phone": "(123) HELP-555",
+      "company": "Event Planning",
+      "address": "357 Beech St",
+      "city": "Tulsa",
+      "state": "OK",
+      "zip_code": "74101",
+      "job_title": "Event Coordinator",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Tulsa set to OK."
+      ]
+    },
+    {
+      "first_name": "Joseph",
+      "last_name": "Hill",
+      "email": "joseph.hill@invalid.",
+      "phone": "(555) NEED-INFO",
+      "company": "Construction Co",
+      "address": "468 Maple Ln",
+      "city": "Minneapolis",
+      "state": "MN",
+      "zip_code": "55401",
+      "job_title": "Project Manager",
+      "change_log": [
+        "Email domain appears invalid; no correction.",
+        "Phone number contains invalid placeholder; kept as-is.",
+        "City and state corrected: Minneapolis set to MN."
+      ]
+    },
+    {
+      "first_name": "Megan",
+      "last_name": "Scott",
+      "email": "megan.scott@..email",
+      "phone": "(555) DIAL.HELP",
+      "company": "Food Service",
+      "address": "579 Elm Dr",
+      "city": "Wichita",
+      "state": "KS",
+      "zip_code": "67201",
+      "job_title": "Restaurant Manager",
+      "change_log": [
+        "Email contains multiple dots; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Wichita set to KS."
+      ]
+    },
+    {
+      "first_name": "Daniel",
+      "last_name": "Green",
+      "email": "daniel@green@@invalid.com",
+      "phone": "(555) CALL-HELP",
+      "company": "Fashion Brand",
+      "address": "681 Oak St",
+      "city": "New Orleans",
+      "state": "LA",
+      "zip_code": "70112",
+      "job_title": "Fashion Designer",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: New Orleans set to LA."
+      ]
+    },
+    {
+      "first_name": "Rachel",
+      "last_name": "Adams",
+      "email": "rachel.adams@invalid.com",
+      "phone": "(555) INFO.DIAL",
+      "company": "Travel Agency",
+      "address": "792 Pine Ave",
+      "city": "Honolulu",
+      "state": "HI",
+      "zip_code": "96801",
+      "job_title": "Travel Coordinator",
+      "change_log": [
+        "Email domain corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Honolulu set to HI."
+      ]
+    },
+    {
+      "first_name": "Matthew",
+      "last_name": "Baker",
+      "email": "matthew.baker@",
+      "phone": "(123) DIAL-555",
+      "company": "Sports Management",
+      "address": "814 Cedar Dr",
+      "city": "Cleveland",
+      "state": "OH",
+      "zip_code": "44101",
+      "job_title": "Sports Agent",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Cleveland set to OH."
+      ]
+    },
+    {
+      "first_name": "Kimberly",
+      "last_name": "Gonzalez",
+      "email": "kimberly@gonzalez@email",
+      "phone": "(555) HELP-DIAL",
+      "company": "Education Services",
+      "address": "925 Birch Ln",
+      "city": "Tampa",
+      "state": "FL",
+      "zip_code": "33601",
+      "job_title": "Education Director",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Tampa set to FL."
+      ]
+    },
+    {
+      "first_name": "Anthony",
+      "last_name": "Nelson",
+      "email": "anthony.nelson@@invalid",
+      "phone": "(555) CALL.HELP",
+      "company": "Non-Profit Org",
+      "address": "147 Walnut St",
+      "city": "Aurora",
+      "state": "FL",
+      "zip_code": "80010",
+      "job_title": "Program Director",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Aurora set to FL."
+      ]
+    },
+    {
+      "first_name": "Elizabeth",
+      "last_name": "Carter",
+      "email": "elizabeth.carter@invalid.",
+      "phone": "(555) INFO-HELP",
+      "company": "Government Agency",
+      "address": "258 Cherry Dr",
+      "city": "Anaheim",
+      "state": "CA",
+      "zip_code": "92801",
+      "job_title": "Policy Analyst",
+      "change_log": [
+        "Email domain appears invalid; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Anaheim set to CA."
+      ]
+    },
+    {
+      "first_name": "Charles",
+      "last_name": "Mitchell",
+      "email": "charles@mitchell@email@",
+      "phone": "(555) HELP.CALL",
+      "company": "Media Company",
+      "address": "369 Spruce Ave",
+      "city": "Santa Ana",
+      "state": "CA",
+      "zip_code": "92701",
+      "job_title": "Media Producer",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Santa Ana set to CA."
+      ]
+    },
+    {
+      "first_name": "Melissa",
+      "last_name": "Perez",
+      "email": "melissa.perez@..invalid",
+      "phone": "(123) INFO.555",
+      "company": "Research Institute",
+      "address": "741 Poplar St",
+      "city": "St. Louis",
+      "state": "MO",
+      "zip_code": "63101",
+      "job_title": "Research Scientist",
+      "change_log": [
+        "Email contains multiple dots; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: St. Louis set to MO."
+      ]
+    },
+    {
+      "first_name": "Jason",
+      "last_name": "Roberts",
+      "email": "jason.roberts@invalid@email",
+      "phone": "(555) DIAL-HELP",
+      "company": "Gaming Studio",
+      "address": "852 Willow Dr",
+      "city": "Riverside",
+      "state": "CA",
+      "zip_code": "92501",
+      "job_title": "Game Developer",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Riverside set to CA."
+      ]
+    },
+    {
+      "first_name": "Amanda",
+      "last_name": "Turner",
+      "email": "amanda@turner@email.com",
+      "phone": "(555) NEEDEDIAL",
+      "company": "Wellness Center",
+      "address": "963 Ash Ln",
+      "city": "Corpus Christi",
+      "state": "TX",
+      "zip_code": "78401",
+      "job_title": "Wellness Coach",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Corpus Christi set to TX."
+      ]
+    },
+    {
+      "first_name": "Justin",
+      "last_name": "Phillips",
+      "email": "justin.phillips@",
+      "phone": "(555) CALL-INFO",
+      "company": "Automotive Co",
+      "address": "159 Magnolia Ave",
+      "city": "Lexington",
+      "state": "KY",
+      "zip_code": "40502",
+      "job_title": "Automotive Engineer",
+      "change_log": [
+        "Email missing domain; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Lexington set to KY."
+      ]
+    },
+    {
+      "first_name": "Heather",
+      "last_name": "Campbell",
+      "email": "heather.campbell@@email",
+      "phone": "(555) HELP.INFO",
+      "company": "Social Media Agency",
+      "address": "357 Hickory St",
+      "city": "Pittsburgh",
+      "state": "PA",
+      "zip_code": "15201",
+      "job_title": "Social Media Manager",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Pittsburgh set to PA."
+      ]
+    },
+    {
+      "first_name": "Brandon",
+      "last_name": "Parker",
+      "email": "brandon@parker@invalid@",
+      "phone": "(123) 555-NEED",
+      "company": "Cybersecurity Firm",
+      "address": "468 Dogwood Dr",
+      "city": "Anchorage",
+      "state": "AK",
+      "zip_code": "99501",
+      "job_title": "Cybersecurity Specialist",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Anchorage set to AK."
+      ]
+    },
+    {
+      "first_name": "Danielle",
+      "last_name": "Evans",
+      "email": "danielle.evans@invalid.",
+      "phone": "(555) INFO-NEED",
+      "company": "Interior Design",
+      "address": "579 Sycamore Ln",
+      "city": "Cincinnati",
+      "state": "OH",
+      "zip_code": "45201",
+      "job_title": "Interior Designer",
+      "change_log": [
+        "Email domain appears invalid; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Cincinnati set to OH."
+      ]
+    },
+    {
+      "first_name": "Gregory",
+      "last_name": "Edwards",
+      "email": "gregory@edwards@@email.com",
+      "phone": "(555) DIAL.NEED",
+      "company": "Environmental Consulting",
+      "address": "681 Redwood Ave",
+      "city": "Newark",
+      "state": "NJ",
+      "zip_code": "94560",
+      "job_title": "Environmental Scientist",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Newark set to NJ."
+      ]
+    },
+    {
+      "first_name": "Kayla",
+      "last_name": "Collins",
+      "email": "kayla.collins@..invalid",
+      "phone": "(555) HELP-INFO",
+      "company": "Photography Studio",
+      "address": "792 Cypress St",
+      "city": "Jersey City",
+      "state": "NJ",
+      "zip_code": "7302",
+      "job_title": "Photographer",
+      "change_log": [
+        "Email contains multiple dots; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Jersey City set to NJ."
+      ]
+    },
+    {
+      "first_name": "Adam",
+      "last_name": "Stewart",
+      "email": "adam.stewart@invalid@",
+      "phone": "(555) HELP-HELP",
+      "company": "Music Production",
+      "address": "814 Juniper Dr",
+      "city": "Buffalo",
+      "state": "NY",
+      "zip_code": "14201",
+      "job_title": "Music Producer",
+      "change_log": [
+        "Email contains multiple '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Buffalo set to NY."
+      ]
+    },
+    {
+      "first_name": "Christina",
+      "last_name": "Sanchez",
+      "email": "christina@sanchez@email",
+      "phone": "(555) 123-INFO",
+      "company": "Beauty Products",
+      "address": "925 Hemlock Ln",
+      "city": "Rochester",
+      "state": "NY",
+      "zip_code": "14602",
+      "job_title": "Brand Manager",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Rochester set to NY."
+      ]
+    },
+    {
+      "first_name": "Eric",
+      "last_name": "Morris",
+      "email": "eric.morris@invalid.",
+      "phone": "(555) NEED-CALL",
+      "company": "Video Production",
+      "address": "147 Fir Ave",
+      "city": "Toledo",
+      "state": "CA",
+      "zip_code": "43601",
+      "job_title": "Video Editor",
+      "change_log": [
+        "Email domain appears invalid; no correction.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Toledo set to CA."
+      ]
+    },
+    {
+      "first_name": "Natalie",
+      "last_name": "Rogers",
+      "email": "natalie@rogers@@invalid",
+      "phone": "(555) INFO-HELP",
+      "company": "Pet Services",
+      "address": "258 Redcedar St",
+      "city": "Plano",
+      "state": "NY",
+      "zip_code": "75023",
+      "job_title": "Veterinarian",
+      "change_log": [
+        "Email contains double '@'; corrected.",
+        "Phone number contains invalid characters; kept as-is.",
+        "City and state corrected: Plano set to NY."
+      ]
+    }
+  ]
+}

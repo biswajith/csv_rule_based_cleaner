@@ -1,0 +1,51 @@
+first_name,last_name,email,phone,company,address,city,state,zip_code,job_title
+John,Smith,john.smith@invalid,555-123-4567,Tech Corp,123 Main St,San Francisco,CA,94101,Software Engineer
+Sarah,Johnson,sarah.johnson@gmail.com,555-234-5678,Data Analytics Inc,456 Oak Ave,Austin,TX,73301,Data Analyst
+Michael,Brown,michael.brown@company.com,555-345-6789,Cloud Systems,789 Pine St,Denver,CO,80201,Cloud Architect
+Emily,Davis,emily.davis@email.com,555-456-7890,AI Solutions,321 Elm St,Seattle,WA,98101,ML Engineer
+David,Wilson,david.wilson@email.com,555-567-8901,FinTech Ltd,654 Maple Dr,Boston,MA,02101,Product Manager
+James,Rodriguez,james.rodriguez@.com,555-678-9012,Sales Force,147 Birch St,Las Vegas,NV,89101,Sales Manager
+Jennifer,Martinez,jennifer.martinez@company.com,555-789-0123,HR Services,258 Walnut Ave,Portland,OR,97201,HR Specialist
+Robert,Anderson,robert.anderson@@email.com,555-890-1234,Legal Advisors,369 Cherry St,Nashville,TN,37201,Legal Counsel
+Maria,Taylor,maria.taylor@email.com,555-901-2345,Consulting Group,741 Spruce Dr,Orlando,FL,32801,Business Consultant
+Christopher,Thomas,christopher.thomas@email.com,555-ABCD-2345,Design Studio,852 Poplar St,San Diego,CA,92101,UX Designer
+Lisa,Garcia,lisa.garcia@email.com,555-123-4567,Marketing Plus,987 Cedar Ln,Phoenix,AZ,85001,Marketing Director
+Amanda,Jackson,amanda.jackson@email.com,555-234-5678,E-commerce Co,963 Willow Ln,Salt Lake City,UT,84101,E-commerce Manager
+Mark,White,mark.white@email.com,555-345-6789,Security Firm,159 Ash St,Memphis,TN,38101,Security Analyst
+Jessica,Harris,jessica.harris@email.com,555-456-7890,Health Tech,357 Magnolia Dr,Louisville,KY,40201,Health Informatics
+Andrew,Martin,andrew.martin@email.com,555-567-8901,Logistics Inc,468 Hickory Ave,Milwaukee,WI,53201,Supply Chain Manager
+Michelle,Thompson,michelle.thompson@invalid.,555-678-9012,Energy Solutions,579 Dogwood St,Albuquerque,NM,87101,Energy Analyst
+Kevin,Garcia,kevin.garcia@email.com,555-789-0123,Real Estate Pro,681 Sycamore Dr,Tucson,AZ,85701,Real Estate Agent
+Laura,Clark,laura.clark@email.com,555-890-1234,Insurance Plus,792 Redwood Ln,Fresno,CA,93701,Insurance Agent
+Steven,Lewis,steven.lewis@email.com,555-901-2345,Transport Co,814 Cypress St,Sacramento,CA,95814,Transport Manager
+Nicole,Lee,nicole.lee@email.com,555-012-3456,Retail Chain,925 Juniper Ave,Kansas City,MO,64101,Retail Manager
+Brian,Walker,brian.walker@email@invalid,555-123-4567,Banking Corp,147 Hemlock Dr,Oklahoma City,OK,73101,Bank Manager
+Stephanie,Hall,stephanie.hall@email.com,555-234-5678,Publishing House,258 Fir St,Atlanta,GA,30301,Editor
+Ryan,Allen,ryan.allen@email.com,555-345-6789,Manufacturing Inc,369 Redcedar Ln,Raleigh,NC,27601,Operations Manager
+Rebecca,Young,rebecca.young@email.com,555-456-7890,Telecom Services,741 Blackgum Dr,Virginia Beach,VA,23451,Network Engineer
+Jonathan,Hernandez,jonathan.hernandez@email.com,555-567-8901,Agriculture Co,852 Sweetgum St,Colorado Springs,CO,80901,Agricultural Scientist
+Samantha,King,samantha.king@..email,555-678-9012,Pharmaceutical Inc,963 Basswood Ave,Omaha,NE,68101,Pharmaceutical Researcher
+Timothy,Wright,timothy.wright@email.com,555-789-0123,Architecture Firm,159 Cottonwood Dr,Miami,FL,33101,Architect
+Ashley,Lopez,ashley.lopez@email.com,555-890-1234,Event Planning,357 Beech St,Tulsa,OK,74101,Event Coordinator
+Joseph,Hill,joseph.hill@email.com,555-901-2345,Construction Co,468 Maple Ln,Minneapolis,MN,55401,Project Manager
+Megan,Scott,megan.scott@email.com,555-012-3456,Food Service,579 Elm Dr,Wichita,KS,67201,Restaurant Manager
+Daniel,Green,daniel.green@email.com,555-123-4567,Fashion Brand,681 Oak St,Miami,TX,33101,Fashion Designer
+Rachel,Adams,rachel.adams@email.com,555-234-5678,Travel Agency,792 Pine Ave,Austin,FL,73301,Travel Coordinator
+Matthew,Baker,matthew.baker@email.com,555-345-6789,Sports Management,814 Cedar Dr,Denver,NY,80201,Sports Agent
+Kimberly,Gonzalez,kimberly.gonzalez@email.com,555-456-7890,Education Services,925 Birch Ln,Seattle,TX,98101,Education Director
+Anthony,Nelson,anthony.nelson@email.com,555-567-8901,Non-Profit Org,147 Walnut St,Boston,FL,02101,Program Director
+Elizabeth,Carter,elizabeth.carter@email.com,555-678-9012,Government Agency,258 Cherry Dr,Anaheim,CA,92801,Policy Analyst
+Charles,Mitchell,charles.mitchell@email.com,555-789-0123,Media Company,369 Spruce Ave,Santa Ana,CA,92701,Media Producer
+Melissa,Perez,melissa.perez@email.com,555-890-1234,Research Institute,741 Poplar St,St. Louis,MO,63101,Research Scientist
+Jason,Roberts,jason.roberts@email.com,555-901-2345,Gaming Studio,852 Willow Dr,Riverside,CA,92501,Game Developer
+Amanda,Turner,amanda.turner@email.com,555-012-3456,Wellness Center,963 Ash Ln,Corpus Christi,TX,78401,Wellness Coach
+justin,phillips,justin.phillips@email.com,555-123-4567,Automotive Co,159 Magnolia Ave,Lexington,KY,40502,Automotive Engineer
+HEATHER,CAMPBELL,heather.campbell@email.com,555-234-5678,Social Media Agency,357 Hickory St,Pittsburgh,PA,15201,Social Media Manager
+Brandon,Parker,brandon.parker@email.com,555-345-6789,Cybersecurity Firm,468 Dogwood Dr,Anchorage,AK,99501,Cybersecurity Specialist
+Danielle,Evans,danielle.evans@email.com,555-456-7890,Interior Design,579 Sycamore Ln,Cincinnati,OH,45201,Interior Designer
+Gregory,Edwards,gregory.edwards@email.com,555-567-8901,Environmental Consulting,681 Redwood Ave,Newark,NJ,07102,Environmental Scientist
+Kayla,Collins,kayla.collins@email.com,555-678-9012,TEST COMPANY,792 Cypress St,Jersey City,NJ,07302,Photographer
+Adam,Stewart,adam.stewart@email.com,555-789-0123,Music Production,814 Juniper Dr,Buffalo,NY,14201,Music Producer
+Christina,Sanchez,christina.sanchez@email.com,555-890-1234,Beauty Products,,Rochester,NY,14602,Brand Manager
+Eric,Morris,eric.morris@email.com,555-901-2345,Video Production,147 Fir Ave,Toledo,OH,43601,Video Editor
+Natalie,Rogers,natalie.rogers@email.com,555-012-3456,Pet Services,258 Redcedar St,Plano,TX,75023,

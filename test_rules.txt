@@ -1,0 +1,5 @@
+Clean and validate all data, preserve all records
+Normalize phone numbers to standard format
+Validate email addresses
+Standardize names to proper case
+Preserve all records even if they have issues
