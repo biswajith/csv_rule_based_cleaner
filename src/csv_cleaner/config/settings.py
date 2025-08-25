@@ -60,10 +60,7 @@ class LLMPromptSettings:
     
     # Rule Expansion Prompt - With comprehensive validation requirements
     RULE_EXPANSION_PROMPT = """
-    Expand these cleaning rules for CSV columns:
-    
-    Rules: {user_rules}
-    Columns: {column_headers}
+    Detect the column that have rules associated with them using {user_rules}. For each column that has rules associated with it, expand the rules into comprehensive cleaning instructions. The information in {column_headers} is the list of all the columns in the data, so that you can detect the columns that have rules associated with them.
     
     🚨 CRITICAL REQUIREMENTS TO INCLUDE IN ALL EXPANDED RULES:
     1. PRESERVE ALL RECORDS - Never remove, discard, or delete any records

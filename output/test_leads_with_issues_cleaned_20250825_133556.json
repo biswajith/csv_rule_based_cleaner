@@ -1,0 +1,2365 @@
+{
+  "session_info": {
+    "session_id": "20250825_133358",
+    "generated_at": "2025-08-25T13:35:56.284356",
+    "input_file": "test_leads_with_issues.csv",
+    "success_rate": 1.0,
+    "total_changes_made": 187,
+    "total_records": 47,
+    "original_columns": [
+      "first_name",
+      "last_name",
+      "email",
+      "phone",
+      "company",
+      "address",
+      "city",
+      "state",
+      "zip_code",
+      "job_title"
+    ]
+  },
+  "cleaned_data": [
+    {
+      "first_name": "John",
+      "last_name": "Smith",
+      "email": "john.smith@invalid",
+      "phone": "(555) 123-4",
+      "company": "Tech Corp",
+      "address": "123 Main St",
+      "city": "Miami",
+      "state": "FL",
+      "zip_code": "90210",
+      "job_title": "Software Engineer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "john.smith@invalid",
+          "corrected_value": "john.smith@invalid",
+          "row_number": 2,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Formatted phone number",
+          "original_value": "555-1234",
+          "corrected_value": "(555) 123-4",
+          "row_number": 2,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Miami is in FL",
+          "original_value": "Miami",
+          "corrected_value": "Miami",
+          "row_number": 2,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Miami is in FL",
+          "original_value": "CA",
+          "corrected_value": "FL",
+          "row_number": 2,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Sarah",
+      "last_name": "Johnson",
+      "email": "sarah.johnson@.com",
+      "phone": "(123) 456-7890",
+      "company": "Data Inc",
+      "address": "456 Oak Ave",
+      "city": "Austin",
+      "state": "TX",
+      "zip_code": "73301",
+      "job_title": "Data Analyst",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email format, double dot",
+          "original_value": "sarah.johnson@.com",
+          "corrected_value": "sarah.johnson@.com",
+          "row_number": 3,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Formatted phone number",
+          "original_value": "1234567890",
+          "corrected_value": "(123) 456-7890",
+          "row_number": 3,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Austin is in TX",
+          "original_value": "Austin",
+          "corrected_value": "Austin",
+          "row_number": 3,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Austin is in TX",
+          "original_value": "NY",
+          "corrected_value": "TX",
+          "row_number": 3,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Michael",
+      "last_name": "Brown",
+      "email": "michael@brown",
+      "phone": "(555) 987-6543",
+      "company": "Cloud Systems",
+      "address": "789 Pine St",
+      "city": "Denver",
+      "state": "CO",
+      "zip_code": "80201",
+      "job_title": "Cloud Architect",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain part",
+          "original_value": "michael@brown",
+          "corrected_value": "michael@brown",
+          "row_number": 4,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Denver is in CO",
+          "original_value": "Denver",
+          "corrected_value": "Denver",
+          "row_number": 4,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Denver is in CO",
+          "original_value": "FL",
+          "corrected_value": "CO",
+          "row_number": 4,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Emily",
+      "last_name": "Davis",
+      "email": "emily.davis@@email.com",
+      "phone": "(555)  ABC-1234",
+      "company": "AI Solutions",
+      "address": "321 Elm St",
+      "city": "Seattle",
+      "state": "TX",
+      "zip_code": "98101",
+      "job_title": "ML Engineer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Double '@'",
+          "original_value": "emily.davis@@email.com",
+          "corrected_value": "emily.davis@email.com",
+          "row_number": 5,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Alphabetic characters in phone number",
+          "original_value": "(555)  ABC-1234",
+          "corrected_value": "(555)  222-1234",
+          "row_number": 5,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Seattle is in WA",
+          "original_value": "Seattle",
+          "corrected_value": "Seattle",
+          "row_number": 5,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Seattle is in WA",
+          "original_value": "TX",
+          "corrected_value": "WA",
+          "row_number": 5,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "David",
+      "last_name": "Wilson",
+      "email": "david.wilson@",
+      "phone": "(987) 654-3210",
+      "company": "FinTech Ltd",
+      "address": "654 Maple Dr",
+      "city": "Boston",
+      "state": "MA",
+      "zip_code": "2101",
+      "job_title": "Product Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "david.wilson@",
+          "corrected_value": "david.wilson@",
+          "row_number": 6,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Boston is in MA",
+          "original_value": "Boston",
+          "corrected_value": "Boston",
+          "row_number": 6,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Boston is in MA",
+          "original_value": "CA",
+          "corrected_value": "MA",
+          "row_number": 6,
+          "column_number": 8,
+          "column_name": "state"
+        },
+        {
+          "field": "zip_code",
+          "issue": "Invalid zip code length, corrected to 02101",
+          "original_value": "2101",
+          "corrected_value": "02101",
+          "row_number": 6,
+          "column_number": 9,
+          "column_name": "zip_code"
+        }
+      ]
+    },
+    {
+      "first_name": "Lisa",
+      "last_name": "Garcia",
+      "email": "lisa.garcia@invalid..com",
+      "phone": "(555) 123-4",
+      "company": "Marketing Plus",
+      "address": "987 Cedar Ln",
+      "city": "Phoenix",
+      "state": "AZ",
+      "zip_code": "85001",
+      "job_title": "Marketing Director",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email format, double dot",
+          "original_value": "lisa.garcia@invalid..com",
+          "corrected_value": "lisa.garcia@invalid.com",
+          "row_number": 7,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Formatted phone number",
+          "original_value": "555-1234-ABCD",
+          "corrected_value": "(555) 123-4",
+          "row_number": 7,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Phoenix is in AZ",
+          "original_value": "Phoenix",
+          "corrected_value": "Phoenix",
+          "row_number": 7,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Phoenix is in AZ",
+          "original_value": "NY",
+          "corrected_value": "AZ",
+          "row_number": 7,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "James",
+      "last_name": "Rodriguez",
+      "email": "james@rodriguez@email",
+      "phone": "(123) 45-",
+      "company": "Sales Force",
+      "address": "147 Birch St",
+      "city": "Las Vegas",
+      "state": "NV",
+      "zip_code": "89101",
+      "job_title": "Sales Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "james@rodriguez@email",
+          "corrected_value": "james@rodriguez@email",
+          "row_number": 8,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Malformed phone number",
+          "original_value": "(123) 45-",
+          "corrected_value": "(123) 45-",
+          "row_number": 8,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Las Vegas is in NV",
+          "original_value": "Las Vegas",
+          "corrected_value": "Las Vegas",
+          "row_number": 8,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Las Vegas is in NV",
+          "original_value": "NV",
+          "corrected_value": "NV",
+          "row_number": 8,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Jennifer",
+      "last_name": "Martinez",
+      "email": "jennifer.martinez@",
+      "phone": "(555) 1234.5678",
+      "company": "HR Services",
+      "address": "258 Walnut Ave",
+      "city": "Portland",
+      "state": "OR",
+      "zip_code": "97201",
+      "job_title": "HR Specialist",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "jennifer.martinez@",
+          "corrected_value": "jennifer.martinez@",
+          "row_number": 9,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Formatted phone number with dot",
+          "original_value": "(555) 1234.5678",
+          "corrected_value": "(555) 1234-5678",
+          "row_number": 9,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Portland is in OR",
+          "original_value": "Portland",
+          "corrected_value": "Portland",
+          "row_number": 9,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Portland is in OR",
+          "original_value": "TX",
+          "corrected_value": "OR",
+          "row_number": 9,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Robert",
+      "last_name": "Anderson",
+      "email": "robert.anderson@invalid@",
+      "phone": "(555) 12-34-56",
+      "company": "Legal Advisors",
+      "address": "369 Cherry St",
+      "city": "Nashville",
+      "state": "TN",
+      "zip_code": "37201",
+      "job_title": "Legal Counsel",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "robert.anderson@invalid@",
+          "corrected_value": "robert.anderson@invalid@",
+          "row_number": 10,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Malformed phone number",
+          "original_value": "(555) 12-34-56",
+          "corrected_value": "(555) 12-34-56",
+          "row_number": 10,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Nashville is in TN",
+          "original_value": "Nashville",
+          "corrected_value": "Nashville",
+          "row_number": 10,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Nashville is in TN",
+          "original_value": "CA",
+          "corrected_value": "TN",
+          "row_number": 10,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Maria",
+      "last_name": "Taylor",
+      "email": "maria.taylor@..com",
+      "phone": "(555) PHONE",
+      "company": "Consulting Group",
+      "address": "741 Spruce Dr",
+      "city": "Orlando",
+      "state": "NY",
+      "zip_code": "32801",
+      "job_title": "Business Consultant",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email format, double dot",
+          "original_value": "maria.taylor@..com",
+          "corrected_value": "maria.taylor@.com",
+          "row_number": 11,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) PHONE",
+          "corrected_value": "(555) 222-66-66",
+          "row_number": 11,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Orlando is in FL",
+          "original_value": "Orlando",
+          "corrected_value": "Orlando",
+          "row_number": 11,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Orlando is in FL",
+          "original_value": "NY",
+          "corrected_value": "FL",
+          "row_number": 11,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Christopher",
+      "last_name": "Thomas",
+      "email": "chris@thomas@@email",
+      "phone": "(555) 123-ABCD",
+      "company": "Design Studio",
+      "address": "852 Poplar St",
+      "city": "San Diego",
+      "state": "FL",
+      "zip_code": "92101",
+      "job_title": "UX Designer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Double '@'",
+          "original_value": "chris@thomas@@email",
+          "corrected_value": "chris@thomas@email",
+          "row_number": 12,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Alphabetic characters in phone number",
+          "original_value": "(555)  123-ABCD",
+          "corrected_value": "(555)  123-222-2345",
+          "row_number": 12,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: San Diego is in CA",
+          "original_value": "San Diego",
+          "corrected_value": "San Diego",
+          "row_number": 12,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: San Diego is in CA",
+          "original_value": "FL",
+          "corrected_value": "CA",
+          "row_number": 12,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Amanda",
+      "last_name": "Jackson",
+      "email": "amanda.jackson@invalid@email",
+      "phone": "(555) ABC.DEFG",
+      "company": "E-commerce Co",
+      "address": "963 Willow Ln",
+      "city": "Salt Lake City",
+      "state": "TX",
+      "zip_code": "84101",
+      "job_title": "E-commerce Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email format",
+          "original_value": "amanda.jackson@invalid@email",
+          "corrected_value": "amanda.jackson@invalid@email",
+          "row_number": 13,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Alphabetic characters in phone number",
+          "original_value": "(555) ABC.DEFG",
+          "corrected_value": "(555) 222-2345",
+          "row_number": 13,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Salt Lake City is in UT",
+          "original_value": "Salt Lake City",
+          "corrected_value": "Salt Lake City",
+          "row_number": 13,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Salt Lake City is in UT",
+          "original_value": "TX",
+          "corrected_value": "UT",
+          "row_number": 13,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Mark",
+      "last_name": "White",
+      "email": "mark.white@",
+      "phone": "(555) 123-ABCD",
+      "company": "Security Firm",
+      "address": "159 Ash St",
+      "city": "Memphis",
+      "state": "TN",
+      "zip_code": "38101",
+      "job_title": "Security Analyst",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "mark.white@",
+          "corrected_value": "mark.white@",
+          "row_number": 14,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Alphabetic characters in phone number",
+          "original_value": "(555) 123-ABCD",
+          "corrected_value": "(555) 123-2222",
+          "row_number": 14,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Memphis is in TN",
+          "original_value": "Memphis",
+          "corrected_value": "Memphis",
+          "row_number": 14,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Memphis is in TN",
+          "original_value": "CA",
+          "corrected_value": "TN",
+          "row_number": 14,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Jessica",
+      "last_name": "Harris",
+      "email": "jessica.harris@@invalid.com",
+      "phone": "(555) 1234-567X",
+      "company": "Health Tech",
+      "address": "357 Magnolia Dr",
+      "city": "Louisville",
+      "state": "NY",
+      "zip_code": "40201",
+      "job_title": "Health Informatics",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Double '@'",
+          "original_value": "jessica.harris@@invalid.com",
+          "corrected_value": "jessica.harris@invalid.com",
+          "row_number": 15,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid character in phone number",
+          "original_value": "(555) 1234-567X",
+          "corrected_value": "(555) 123-4567",
+          "row_number": 15,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Louisville is in KY",
+          "original_value": "Louisville",
+          "corrected_value": "Louisville",
+          "row_number": 15,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Louisville is in KY",
+          "original_value": "NY",
+          "corrected_value": "KY",
+          "row_number": 15,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Andrew",
+      "last_name": "Martin",
+      "email": "andrew@martin@email@com",
+      "phone": "(555) 123-ABC4",
+      "company": "Logistics Inc",
+      "address": "468 Hickory Ave",
+      "city": "Milwaukee",
+      "state": "WI",
+      "zip_code": "53201",
+      "job_title": "Supply Chain Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "andrew@martin@email@com",
+          "corrected_value": "andrew@martin@email.com",
+          "row_number": 16,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Alphabetic characters in phone number",
+          "original_value": "(555) 123-ABC4",
+          "corrected_value": "(555) 123-2224",
+          "row_number": 16,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Milwaukee is in WI",
+          "original_value": "Milwaukee",
+          "corrected_value": "Milwaukee",
+          "row_number": 16,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Milwaukee is in WI",
+          "original_value": "FL",
+          "corrected_value": "WI",
+          "row_number": 16,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Michelle",
+      "last_name": "Thompson",
+      "email": "michelle.thompson@invalid.",
+      "phone": "(555) CALL-NOW",
+      "company": "Energy Solutions",
+      "address": "579 Dogwood St",
+      "city": "Albuquerque",
+      "state": "TX",
+      "zip_code": "87101",
+      "job_title": "Energy Analyst",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "michelle.thompson@invalid.",
+          "corrected_value": "michelle.thompson@invalid.",
+          "row_number": 17,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) CALL-NOW",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 17,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Albuquerque is in NM",
+          "original_value": "Albuquerque",
+          "corrected_value": "Albuquerque",
+          "row_number": 17,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Albuquerque is in NM",
+          "original_value": "TX",
+          "corrected_value": "NM",
+          "row_number": 17,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Kevin",
+      "last_name": "Garcia",
+      "email": "kevin.garcia@..invalid",
+      "phone": "(123) 456-ABCD",
+      "company": "Real Estate Pro",
+      "address": "681 Sycamore Dr",
+      "city": "Tucson",
+      "state": "AZ",
+      "zip_code": "85701",
+      "job_title": "Real Estate Agent",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email format",
+          "original_value": "kevin.garcia@..invalid",
+          "corrected_value": "kevin.garcia@invalid",
+          "row_number": 18,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Alphabetic characters in phone number",
+          "original_value": "(123) 456-ABCD",
+          "corrected_value": "(123) 456-2222",
+          "row_number": 18,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Tucson is in AZ",
+          "original_value": "Tucson",
+          "corrected_value": "Tucson",
+          "row_number": 18,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Tucson is in AZ",
+          "original_value": "CA",
+          "corrected_value": "AZ",
+          "row_number": 18,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Laura",
+      "last_name": "Clark",
+      "email": "laura.clark@email@invalid",
+      "phone": "(555) NO.PHONE",
+      "company": "Insurance Plus",
+      "address": "792 Redwood Ln",
+      "city": "Fresno",
+      "state": "CA",
+      "zip_code": "93701",
+      "job_title": "Insurance Agent",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "laura.clark@email@invalid",
+          "corrected_value": "laura.clark@email@invalid",
+          "row_number": 19,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) NO.PHONE",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 19,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Fresno is in CA",
+          "original_value": "Fresno",
+          "corrected_value": "Fresno",
+          "row_number": 19,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Fresno is in CA",
+          "original_value": "NY",
+          "corrected_value": "CA",
+          "row_number": 19,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Steven",
+      "last_name": "Lewis",
+      "email": "steven@lewis@@com",
+      "phone": "(555) 1234-CALL",
+      "company": "Transport Co",
+      "address": "814 Cypress St",
+      "city": "Sacramento",
+      "state": "CA",
+      "zip_code": "95814",
+      "job_title": "Transport Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "steven@lewis@@com",
+          "corrected_value": "steven@lewis@com",
+          "row_number": 20,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Malformed phone number",
+          "original_value": "(555) 1234-CALL",
+          "corrected_value": "(555) 123-4",
+          "row_number": 20,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Sacramento is in CA",
+          "original_value": "Sacramento",
+          "corrected_value": "Sacramento",
+          "row_number": 20,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Sacramento is in CA",
+          "original_value": "FL",
+          "corrected_value": "CA",
+          "row_number": 20,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Nicole",
+      "last_name": "Lee",
+      "email": "nicole.lee@invalid@email.com",
+      "phone": "(555)  Dial.Me",
+      "company": "Retail Chain",
+      "address": "925 Juniper Ave",
+      "city": "Kansas City",
+      "state": "TX",
+      "zip_code": "64101",
+      "job_title": "Retail Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "nicole.lee@invalid@email.com",
+          "corrected_value": "nicole.lee@invalid@email.com",
+          "row_number": 21,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  Dial.Me",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 21,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Kansas City is in MO",
+          "original_value": "Kansas City",
+          "corrected_value": "Kansas City",
+          "row_number": 21,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Kansas City is in MO",
+          "original_value": "TX",
+          "corrected_value": "MO",
+          "row_number": 21,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Brian",
+      "last_name": "Walker",
+      "email": "brian.walker@",
+      "phone": "(555)  HELP-NOW",
+      "company": "Banking Corp",
+      "address": "147 Hemlock Dr",
+      "city": "Oklahoma City",
+      "state": "OK",
+      "zip_code": "73101",
+      "job_title": "Bank Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "brian.walker@",
+          "corrected_value": "brian.walker@",
+          "row_number": 22,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  HELP-NOW",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 22,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Oklahoma City is in OK",
+          "original_value": "Oklahoma City",
+          "corrected_value": "Oklahoma City",
+          "row_number": 22,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Oklahoma City is in OK",
+          "original_value": "CA",
+          "corrected_value": "OK",
+          "row_number": 22,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Stephanie",
+      "last_name": "Hall",
+      "email": "stephanie.hall@@email.invalid",
+      "phone": "(555) ASK.HELP",
+      "company": "Publishing House",
+      "address": "258 Fir St",
+      "city": "Atlanta",
+      "state": "NY",
+      "zip_code": "30301",
+      "job_title": "Editor",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Double '@'",
+          "original_value": "stephanie.hall@@email.invalid",
+          "corrected_value": "stephanie.hall@email.invalid",
+          "row_number": 23,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) ASK.HELP",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 23,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Atlanta is in GA",
+          "original_value": "Atlanta",
+          "corrected_value": "Atlanta",
+          "row_number": 23,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Atlanta is in GA",
+          "original_value": "NY",
+          "corrected_value": "GA",
+          "row_number": 23,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Ryan",
+      "last_name": "Allen",
+      "email": "ryan@allen@invalid@",
+      "phone": "(123) -CALL-555",
+      "company": "Manufacturing Inc",
+      "address": "369 Redcedar Ln",
+      "city": "Raleigh",
+      "state": "NC",
+      "zip_code": "27601",
+      "job_title": "Operations Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "ryan@allen@invalid@",
+          "corrected_value": "ryan@allen@invalid@",
+          "row_number": 24,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Malformed phone number",
+          "original_value": "(123) -CALL-555",
+          "corrected_value": "(123)  555",
+          "row_number": 24,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Raleigh is in NC",
+          "original_value": "Raleigh",
+          "corrected_value": "Raleigh",
+          "row_number": 24,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Raleigh is in NC",
+          "original_value": "FL",
+          "corrected_value": "NC",
+          "row_number": 24,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Rebecca",
+      "last_name": "Young",
+      "email": "rebecca.young@invalid..email",
+      "phone": "(555)  INFO-CALL",
+      "company": "Telecom Services",
+      "address": "741 Blackgum Dr",
+      "city": "Virginia Beach",
+      "state": "TX",
+      "zip_code": "23451",
+      "job_title": "Network Engineer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "rebecca.young@invalid..email",
+          "corrected_value": "rebecca.young@invalid.com",
+          "row_number": 25,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  INFO-CALL",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 25,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Virginia Beach is in VA",
+          "original_value": "Virginia Beach",
+          "corrected_value": "Virginia Beach",
+          "row_number": 25,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Virginia Beach is in VA",
+          "original_value": "TX",
+          "corrected_value": "VA",
+          "row_number": 25,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Jonathan",
+      "last_name": "Hernandez",
+      "email": "jonathan@hernandez@email",
+      "phone": "(555) NEED.HELP",
+      "company": "Agriculture Co",
+      "address": "852 Sweetgum St",
+      "city": "Colorado Springs",
+      "state": "CA",
+      "zip_code": "80901",
+      "job_title": "Agricultural Scientist",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "jonathan@hernandez@email",
+          "corrected_value": "jonathan@hernandez@email",
+          "row_number": 26,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) NEED.HELP",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 26,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Colorado Springs is in CO",
+          "original_value": "Colorado Springs",
+          "corrected_value": "Colorado Springs",
+          "row_number": 26,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Colorado Springs is in CO",
+          "original_value": "CA",
+          "corrected_value": "CO",
+          "row_number": 26,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Samantha",
+      "last_name": "King",
+      "email": "samantha.king@",
+      "phone": "(555) DIAL-INFO",
+      "company": "Pharmaceutical Inc",
+      "address": "963 Basswood Ave",
+      "city": "Omaha",
+      "state": "NY",
+      "zip_code": "68101",
+      "job_title": "Pharmaceutical Researcher",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "samantha.king@",
+          "corrected_value": "samantha.king@",
+          "row_number": 27,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) DIAL-INFO",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 27,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Omaha is in NE",
+          "original_value": "Omaha",
+          "corrected_value": "Omaha",
+          "row_number": 27,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Omaha is in NE",
+          "original_value": "NY",
+          "corrected_value": "NE",
+          "row_number": 27,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Timothy",
+      "last_name": "Wright",
+      "email": "timothy.wright@@invalid",
+      "phone": "(555) CALL.NOW",
+      "company": "Architecture Firm",
+      "address": "159 Cottonwood Dr",
+      "city": "Miami",
+      "state": "FL",
+      "zip_code": "33101",
+      "job_title": "Architect",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "timothy.wright@@invalid",
+          "corrected_value": "timothy.wright@email",
+          "row_number": 28,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) CALL.NOW",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 28,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Miami is in FL",
+          "original_value": "Miami",
+          "corrected_value": "Miami",
+          "row_number": 28,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Miami is in FL",
+          "original_value": "FL",
+          "corrected_value": "FL",
+          "row_number": 28,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Ashley",
+      "last_name": "Lopez",
+      "email": "ashley@lopez@email@invalid",
+      "phone": "(123)  HELP-555",
+      "company": "Event Planning",
+      "address": "357 Beech St",
+      "city": "Tulsa",
+      "state": "TX",
+      "zip_code": "74101",
+      "job_title": "Event Coordinator",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "ashley@lopez@email@invalid",
+          "corrected_value": "ashley@lopez@email",
+          "row_number": 29,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(123)  HELP-555",
+          "corrected_value": "(123)  222-6666",
+          "row_number": 29,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Tulsa is in OK",
+          "original_value": "Tulsa",
+          "corrected_value": "Tulsa",
+          "row_number": 29,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Tulsa is in OK",
+          "original_value": "TX",
+          "corrected_value": "OK",
+          "row_number": 29,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Joseph",
+      "last_name": "Hill",
+      "email": "joseph.hill@invalid.",
+      "phone": "(555) -NEED-INFO",
+      "company": "Construction Co",
+      "address": "468 Maple Ln",
+      "city": "Minneapolis",
+      "state": "MN",
+      "zip_code": "55401",
+      "job_title": "Project Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "joseph.hill@invalid.",
+          "corrected_value": "joseph.hill@invalid.",
+          "row_number": 30,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) -NEED-INFO",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 30,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Minneapolis is in MN",
+          "original_value": "Minneapolis",
+          "corrected_value": "Minneapolis",
+          "row_number": 30,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Minneapolis is in MN",
+          "original_value": "CA",
+          "corrected_value": "MN",
+          "row_number": 30,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Megan",
+      "last_name": "Scott",
+      "email": "megan.scott@..email",
+      "phone": "(555)  DIAL.HELP",
+      "company": "Food Service",
+      "address": "579 Elm Dr",
+      "city": "Wichita",
+      "state": "NY",
+      "zip_code": "67201",
+      "job_title": "Restaurant Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "megan.scott@..email",
+          "corrected_value": "megan.scott@.com",
+          "row_number": 31,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  DIAL.HELP",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 31,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Wichita is in KS",
+          "original_value": "Wichita",
+          "corrected_value": "Wichita",
+          "row_number": 31,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Wichita is in KS",
+          "original_value": "NY",
+          "corrected_value": "KS",
+          "row_number": 31,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Daniel",
+      "last_name": "Green",
+      "email": "daniel@green@@invalid.com",
+      "phone": "(555) -CALL-HELP",
+      "company": "Fashion Brand",
+      "address": "681 Oak St",
+      "city": "New Orleans",
+      "state": "LA",
+      "zip_code": "70112",
+      "job_title": "Fashion Designer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "daniel@green@@invalid.com",
+          "corrected_value": "daniel@green@invalid.com",
+          "row_number": 32,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) -CALL-HELP",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 32,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: New Orleans is in LA",
+          "original_value": "New Orleans",
+          "corrected_value": "New Orleans",
+          "row_number": 32,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: New Orleans is in LA",
+          "original_value": "FL",
+          "corrected_value": "LA",
+          "row_number": 32,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Rachel",
+      "last_name": "Adams",
+      "email": "rachel.adams@invalid@",
+      "phone": "(555)  INFO.DIAL",
+      "company": "Travel Agency",
+      "address": "792 Pine Ave",
+      "city": "Honolulu",
+      "state": "TX",
+      "zip_code": "96801",
+      "job_title": "Travel Coordinator",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "rachel.adams@invalid@",
+          "corrected_value": "rachel.adams@invalid",
+          "row_number": 33,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  INFO.DIAL",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 33,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Honolulu is in HI",
+          "original_value": "Honolulu",
+          "corrected_value": "Honolulu",
+          "row_number": 33,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Honolulu is in HI",
+          "original_value": "TX",
+          "corrected_value": "HI",
+          "row_number": 33,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Matthew",
+      "last_name": "Baker",
+      "email": "matthew.baker@",
+      "phone": "(123)  DIAL-555",
+      "company": "Sports Management",
+      "address": "814 Cedar Dr",
+      "city": "Cleveland",
+      "state": "OH",
+      "zip_code": "44101",
+      "job_title": "Sports Agent",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "matthew.baker@",
+          "corrected_value": "matthew.baker@",
+          "row_number": 34,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(123)  DIAL-555",
+          "corrected_value": "(123)  555",
+          "row_number": 34,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Cleveland is in OH",
+          "original_value": "Cleveland",
+          "corrected_value": "Cleveland",
+          "row_number": 34,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Cleveland is in OH",
+          "original_value": "CA",
+          "corrected_value": "OH",
+          "row_number": 34,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Kimberly",
+      "last_name": "Gonzalez",
+      "email": "kimberly@gonzalez@email",
+      "phone": "(555) HELP-DIAL",
+      "company": "Education Services",
+      "address": "925 Birch Ln",
+      "city": "Tampa",
+      "state": "NY",
+      "zip_code": "33601",
+      "job_title": "Education Director",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "kimberly@gonzalez@email",
+          "corrected_value": "kimberly@gonzalez@email",
+          "row_number": 35,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) HELP-DIAL",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 35,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Tampa is in FL",
+          "original_value": "Tampa",
+          "corrected_value": "Tampa",
+          "row_number": 35,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Tampa is in FL",
+          "original_value": "NY",
+          "corrected_value": "FL",
+          "row_number": 35,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Anthony",
+      "last_name": "Nelson",
+      "email": "anthony.nelson@@invalid",
+      "phone": "(555)  CALL.INFO",
+      "company": "Non-Profit Org",
+      "address": "147 Walnut St",
+      "city": "Aurora",
+      "state": "FL",
+      "zip_code": "80010",
+      "job_title": "Program Director",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "anthony.nelson@@invalid",
+          "corrected_value": "anthony.nelson@invalid",
+          "row_number": 36,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  CALL.INFO",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 36,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Aurora is in FL",
+          "original_value": "Aurora",
+          "corrected_value": "Aurora",
+          "row_number": 36,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Aurora is in FL",
+          "original_value": "FL",
+          "corrected_value": "FL",
+          "row_number": 36,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Elizabeth",
+      "last_name": "Carter",
+      "email": "elizabeth.carter@invalid.",
+      "phone": "(555)  INFO-HELP",
+      "company": "Government Agency",
+      "address": "258 Cherry Dr",
+      "city": "Anaheim",
+      "state": "TX",
+      "zip_code": "92801",
+      "job_title": "Policy Analyst",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "elizabeth.carter@invalid.",
+          "corrected_value": "elizabeth.carter@invalid.",
+          "row_number": 37,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  INFO-HELP",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 37,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Anaheim is in CA",
+          "original_value": "Anaheim",
+          "corrected_value": "Anaheim",
+          "row_number": 37,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Anaheim is in CA",
+          "original_value": "TX",
+          "corrected_value": "CA",
+          "row_number": 37,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Charles",
+      "last_name": "Mitchell",
+      "email": "charles@mitchell@email@",
+      "phone": "(555) HELP.CALL",
+      "company": "Media Company",
+      "address": "369 Spruce Ave",
+      "city": "Santa Ana",
+      "state": "CA",
+      "zip_code": "92701",
+      "job_title": "Media Producer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "charles@mitchell@email@",
+          "corrected_value": "charles@mitchell@email",
+          "row_number": 38,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) HELP.CALL",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 38,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Santa Ana is in CA",
+          "original_value": "Santa Ana",
+          "corrected_value": "Santa Ana",
+          "row_number": 38,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Santa Ana is in CA",
+          "original_value": "CA",
+          "corrected_value": "CA",
+          "row_number": 38,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Melissa",
+      "last_name": "Perez",
+      "email": "melissa.perez@..invalid",
+      "phone": "123-INFO-555",
+      "company": "Research Institute",
+      "address": "741 Poplar St",
+      "city": "St. Louis",
+      "state": "NY",
+      "zip_code": "63101",
+      "job_title": "Research Scientist",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "melissa.perez@..invalid",
+          "corrected_value": "melissa.perez@.invalid",
+          "row_number": 39,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "123-INFO-555",
+          "corrected_value": "123-222-6666",
+          "row_number": 39,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: St. Louis is in MO",
+          "original_value": "St. Louis",
+          "corrected_value": "St. Louis",
+          "row_number": 39,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: St. Louis is in MO",
+          "original_value": "NY",
+          "corrected_value": "MO",
+          "row_number": 39,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Jason",
+      "last_name": "Roberts",
+      "email": "jason.roberts@invalid@email",
+      "phone": "(555)  DIAL-HELP",
+      "company": "Gaming Studio",
+      "address": "852 Willow Dr",
+      "city": "Riverside",
+      "state": "FL",
+      "zip_code": "92501",
+      "job_title": "Game Developer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "jason.roberts@invalid@email",
+          "corrected_value": "jason.roberts@invalid@email",
+          "row_number": 40,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  DIAL-HELP",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 40,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Riverside is in CA",
+          "original_value": "Riverside",
+          "corrected_value": "Riverside",
+          "row_number": 40,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Riverside is in CA",
+          "original_value": "FL",
+          "corrected_value": "CA",
+          "row_number": 40,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Amanda",
+      "last_name": "Turner",
+      "email": "amanda@turner@@invalid.com",
+      "phone": "(555)  NEEED.DIAL",
+      "company": "Wellness Center",
+      "address": "963 Ash Ln",
+      "city": "Corpus Christi",
+      "state": "TX",
+      "zip_code": "78401",
+      "job_title": "Wellness Coach",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "amanda@turner@@invalid.com",
+          "corrected_value": "amanda@turner@invalid.com",
+          "row_number": 41,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  NEEED.DIAL",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 41,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Corpus Christi is in TX",
+          "original_value": "Corpus Christi",
+          "corrected_value": "Corpus Christi",
+          "row_number": 41,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Corpus Christi is in TX",
+          "original_value": "TX",
+          "corrected_value": "TX",
+          "row_number": 41,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Justin",
+      "last_name": "Phillips",
+      "email": "justin.phillips@",
+      "phone": "(555) -CALL-INFO",
+      "company": "Automotive Co",
+      "address": "159 Magnolia Ave",
+      "city": "Lexington",
+      "state": "CA",
+      "zip_code": "40502",
+      "job_title": "Automotive Engineer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Missing domain",
+          "original_value": "justin.phillips@",
+          "corrected_value": "justin.phillips@",
+          "row_number": 42,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) -CALL-INFO",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 42,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Lexington is in KY",
+          "original_value": "Lexington",
+          "corrected_value": "Lexington",
+          "row_number": 42,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Lexington is in KY",
+          "original_value": "CA",
+          "corrected_value": "KY",
+          "row_number": 42,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Heather",
+      "last_name": "Campbell",
+      "email": "heather.campbell@@email",
+      "phone": "(555) HELP.INFO",
+      "company": "Social Media Agency",
+      "address": "357 Hickory St",
+      "city": "Pittsburgh",
+      "state": "NY",
+      "zip_code": "15201",
+      "job_title": "Social Media Manager",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Double '@'",
+          "original_value": "heather.campbell@@email",
+          "corrected_value": "heather.campbell@email",
+          "row_number": 43,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555) HELP.INFO",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 43,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Pittsburgh is in PA",
+          "original_value": "Pittsburgh",
+          "corrected_value": "Pittsburgh",
+          "row_number": 43,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Pittsburgh is in PA",
+          "original_value": "NY",
+          "corrected_value": "PA",
+          "row_number": 43,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Brandon",
+      "last_name": "Parker",
+      "email": "brandon@parker@invalid@",
+      "phone": "(123)  NEED-555",
+      "company": "Cybersecurity Firm",
+      "address": "468 Dogwood Dr",
+      "city": "Anchorage",
+      "state": "AK",
+      "zip_code": "99501",
+      "job_title": "Cybersecurity Specialist",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "brandon@parker@invalid@",
+          "corrected_value": "brandon@parker@invalid@",
+          "row_number": 44,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(123)  NEED-555",
+          "corrected_value": "(123)  222-6666",
+          "row_number": 44,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Anchorage is in AK",
+          "original_value": "Anchorage",
+          "corrected_value": "Anchorage",
+          "row_number": 44,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Anchorage is in AK",
+          "original_value": "FL",
+          "corrected_value": "AK",
+          "row_number": 44,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Danielle",
+      "last_name": "Evans",
+      "email": "danielle.evans@invalid.",
+      "phone": "(555)  INFO-NEED",
+      "company": "Interior Design",
+      "address": "579 Sycamore Ln",
+      "city": "Cincinnati",
+      "state": "OH",
+      "zip_code": "45201",
+      "job_title": "Interior Designer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "danielle.evans@invalid.",
+          "corrected_value": "danielle.evans@invalid.",
+          "row_number": 45,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  INFO-NEED",
+          "corrected_value": "(555) 222-6666",
+          "row_number": 45,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Cincinnati is in OH",
+          "original_value": "Cincinnati",
+          "corrected_value": "Cincinnati",
+          "row_number": 45,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Cincinnati is in OH",
+          "original_value": "TX",
+          "corrected_value": "OH",
+          "row_number": 45,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Gregory",
+      "last_name": "Edwards",
+      "email": "gregory@edwards@@email.com",
+      "phone": "(555)  DIAL.NEED",
+      "company": "Environmental Consulting",
+      "address": "681 Redwood Ave",
+      "city": "Newark",
+      "state": "NJ",
+      "zip_code": "94560",
+      "job_title": "Environmental Scientist",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "gregory@edwards@@email.com",
+          "corrected_value": "gregory@edwards@email.com",
+          "row_number": 46,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  DIAL.NEED",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 46,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Newark is in NJ",
+          "original_value": "Newark",
+          "corrected_value": "Newark",
+          "row_number": 46,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Newark is in NJ",
+          "original_value": "New Jersey",
+          "corrected_value": "NJ",
+          "row_number": 46,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Kayla",
+      "last_name": "Collins",
+      "email": "kayla.collins@..invalid",
+      "phone": "(555)  HELP-INFO",
+      "company": "Photography Studio",
+      "address": "792 Cypress St",
+      "city": "Jersey City",
+      "state": "NY",
+      "zip_code": "7302",
+      "job_title": "Photographer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Invalid email",
+          "original_value": "kayla.collins@..invalid",
+          "corrected_value": "kayla.collins@.invalid",
+          "row_number": 47,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  HELP-INFO",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 47,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Jersey City is in NJ",
+          "original_value": "Jersey City",
+          "corrected_value": "Jersey City",
+          "row_number": 47,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Jersey City is in NJ",
+          "original_value": "NY",
+          "corrected_value": "NJ",
+          "row_number": 47,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    },
+    {
+      "first_name": "Adam",
+      "last_name": "Stewart",
+      "email": "adam.stewart@invalid@",
+      "phone": "(555)  HELP-HELP",
+      "company": "Music Production",
+      "address": "814 Juniper Dr",
+      "city": "Buffalo",
+      "state": "NY",
+      "zip_code": "14201",
+      "job_title": "Music Producer",
+      "change_log": [
+        {
+          "field": "email",
+          "issue": "Multiple '@' symbols",
+          "original_value": "adam.stewart@invalid@",
+          "corrected_value": "adam.stewart@invalid",
+          "row_number": 48,
+          "column_number": 3,
+          "column_name": "email"
+        },
+        {
+          "field": "phone",
+          "issue": "Invalid phone number",
+          "original_value": "(555)  HELP-HELP",
+          "corrected_value": "(555)  222-6666",
+          "row_number": 48,
+          "column_number": 4,
+          "column_name": "phone"
+        },
+        {
+          "field": "city",
+          "issue": "Geographic correction: Buffalo is in NY",
+          "original_value": "Buffalo",
+          "corrected_value": "Buffalo",
+          "row_number": 48,
+          "column_number": 7,
+          "column_name": "city"
+        },
+        {
+          "field": "state",
+          "issue": "Geographic correction: Buffalo is in NY",
+          "original_value": "FL",
+          "corrected_value": "NY",
+          "row_number": 48,
+          "column_number": 8,
+          "column_name": "state"
+        }
+      ]
+    }
+  ]
+}
