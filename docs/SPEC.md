@@ -281,6 +281,29 @@ Warnings (returned with the preview, shown to the reviewer, never block):
 
 Only enabled ops are checked for R5–R9 semantics, but R1/R2 apply to disabled ops too.
 
+### 4.5 Approval
+
+A plan must be approved by a named person before any data is cleaned (owner decision,
+§15). Plans start as drafts; approval is recorded in the plan itself.
+
+- `Plan.approval: Approval | null` (default null), `Approval = {by: str (1–100 chars after
+  trimming), at: ISO-8601 UTC datetime, plan_hash: str}`. `PlannerOutput` has no such
+  field: a planned plan is always a draft (`POST /api/plan` returns `approval: null`).
+- `plan_hash` = SHA-256 hex of `json.dumps(plan.model_dump(mode="json",
+  exclude={"approval"}), sort_keys=True, separators=(",", ":"), ensure_ascii=False)`
+  (`Plan.content_hash()`). A plan **is approved** iff `approval` is set and its
+  `plan_hash` equals the plan's current hash (`Plan.is_approved()`). Any edit (toggle,
+  delete, JSON edit, rules, notes) changes the hash, so the old approval no longer counts
+  and the plan must be approved again. `Plan.with_approval(by)` returns an approved copy
+  (`ValueError` for a blank or over-long name).
+- `approval_error(plan)` gives the refusal text: `Plan is not approved. Approve it before
+  running.` (no approval) or `Plan changed after it was approved by <by>. Approve it
+  again.` (stale approval).
+- **Where it is enforced:** at the entry points — CLI `apply`/`run` and `POST /api/runs` —
+  not inside `clean()`. `clean` is a library function and its callers (and the tests) use
+  unapproved plans; it simply copies `plan.approval` into `RunReport.approval` and
+  `plan.json`.
+
 ## 5. Planner
 
 ### 5.1 Profiling (no LLM)
@@ -693,8 +716,10 @@ class LLM(Protocol):
 ```
 scrubber profile SOURCE [source opts]
 scrubber plan    SOURCE --rules rules.txt [-o plan.json] [--columns a,b,c]
+scrubber approve PLAN [SOURCE] [--by NAME] [--yes] [source opts]
 scrubber apply   SOURCE --plan plan.json [run opts]
-scrubber run     SOURCE --rules rules.txt [--yes] [--columns a,b,c] [run opts]
+scrubber run     SOURCE --rules rules.txt [--yes --approved-by NAME] [--save-plan PATH]
+                 [--columns a,b,c] [run opts]
 scrubber serve   [--host 127.0.0.1] [--port 8000] [--allow-remote]
 
 source opts: --delimiter --encoding | --table --schema --key-column | --db --collection --filter JSON
@@ -707,10 +732,21 @@ run opts   : --in-place  --overwrite  --no-llm  --max-llm-cells N  --out DIR
   (read the URL from that environment variable).
 - Rules file: UTF-8, one rule per line; blank lines and lines starting with `#` ignored.
 - `plan`: profile → plan → dry-run; prints plan, preview and warnings as `rich` tables;
-  writes the plan to `-o` (default `plan.json`).
-- `apply`: validates the plan against the source, then cleans. `--in-place` asks for a
-  typed confirmation unless `--yes`.
-- `run`: `plan`, show, ask `Proceed? [y/N]` (skipped with `--yes`), then `apply`.
+  writes the plan to `-o` (default `plan.json`) as a **draft** (no approval) and tells the
+  user to review and approve it.
+- `approve`: loads and validates PLAN, prints the per-column ops; if SOURCE is given also
+  prints the dry-run preview on it. Asks for the approver's name (`--by`, default
+  `getpass.getuser()`), then `Approve this plan as <name>? [y/N]` (skipped with `--yes`),
+  rewrites the plan file with the approval and prints who/when. Approving an already
+  approved, unchanged plan replaces the approval.
+- `apply`: refuses a plan that is not approved (exit 2, §4.5 message plus ``Run `scrubber
+  approve <file>`.``). Otherwise validates the plan against the source, then cleans.
+  `--in-place` asks for a typed confirmation unless `--yes`.
+- `run`: `plan`, show, ask the approver's name (default `getpass.getuser()`; skipped with
+  `--approved-by`), then `Approve this plan as <name> and apply? [y/N]`, then `apply`.
+  `--yes` skips the question but requires `--approved-by NAME` (usage error otherwise):
+  `--yes` alone never approves. `--save-plan PATH` writes the approved plan. The in-place
+  typed confirmation is separate and unchanged.
 - Every run prints the summary (rows, changed, flagged, LLM cells/calls/tokens, target,
   run dir).
 - Exit codes: 0 ok; 1 failure (source error, invalid plan, LLM failure during planning,
@@ -729,8 +765,9 @@ to the server once, kept only in server memory, and never returned.
 | POST | `/api/sources` | `{kind:"sql", url, table, schema?, key_column?}` or `{kind:"mongo", uri, database, collection, filter?}` → `SourceInfo` |
 | GET | `/api/sources/{source_id}/profile` | → `Profile` |
 | POST | `/api/plan` | `{source_id, rules: [str], columns?: [str]}` → `{plan, preview, usage}` |
-| POST | `/api/preview` | `{source_id, plan}` → `{plan, preview}` (no LLM; used after UI edits and "Load plan JSON"). `plan` is the server-normalised plan (`Plan.model_dump(mode="json")`, every default filled in); the UI stores this, never the raw uploaded/edited JSON |
-| POST | `/api/runs` | `{source_id, plan, in_place=false, overwrite=false, no_llm=false, max_llm_cells?}` → `{run_id}` |
+| POST | `/api/preview` | `{source_id, plan}` → `{plan, preview}` (no LLM; used after UI edits and "Load plan JSON"). `approval` is kept only while still valid; a stale one becomes `null` and `preview.warnings` gains `Approval by <by> was removed: the plan changed after it was approved.`, so `plan.approval != null` ⇔ approved. `plan` is the server-normalised plan (`Plan.model_dump(mode="json")`, every default filled in); the UI stores this, never the raw uploaded/edited JSON |
+| POST | `/api/plans/approve` | `{plan, by}` → `{plan}` — normalised plan with `approval` set (server sets `at` = now UTC and computes `plan_hash`). 422 for an invalid plan or blank/over-long `by`. Needs no source |
+| POST | `/api/runs` | `{source_id, plan, in_place=false, overwrite=false, no_llm=false, max_llm_cells?}` → `{run_id}`. 409 unless the plan is approved (§4.5), checked before the source is opened |
 | GET | `/api/runs/{run_id}` | → `RunStatus` |
 | POST | `/api/runs/{run_id}/cancel` | → `RunStatus` |
 | GET | `/api/runs/{run_id}/changes?column=&offset=0&limit=100` | → `{total, items: [Change]}` |
@@ -764,10 +801,13 @@ Behaviour:
   after the requested page), else from the scan. For a run that exists but never produced
   the file (cancelled while queued, precondition failed in the worker) they return
   `{total: 0, items: []}` (200); only an unknown run is 404.
-- `/api/preview` and `/api/runs` validate the plan (422) before the source is opened.
+- `/api/preview` and `/api/runs` validate the plan (422) before the source is opened;
+  `/api/runs` then checks approval (409 `{detail: "Plan is not approved. Approve it before
+  running."}`, or `"Plan changed after it was approved by <by>. Approve it again."`).
+  `RunReport.approval` (copied from the plan) is part of `report.json`.
 - Errors — body always `{detail: str, errors?: [str]}`: 400 bad source / bad input /
   missing API key; 404 unknown source or run; 409 output target exists (retry with
-  `overwrite`); 413 upload too large; 422 invalid plan (`errors` lists every problem);
+  `overwrite`) or plan not approved; 413 upload too large; 422 invalid plan (`errors` lists every problem);
   502 LLM failure.
 - `in_place=true` is rejected (400) for CSV sources.
 
@@ -821,14 +861,23 @@ errors}` in an inline error banner. No other UI/state libraries.
    bumps a plan revision and preview responses for an older revision are discarded. The
    UI always adopts the normalised `plan` returned by `/api/preview` (Load plan, Edit JSON,
    Re-run preview). Actions:
-   *Re-run preview*, *Download plan*, *Run cleaning* (switches: in-place — hidden for
+   *Re-run preview*, *Download plan*, *Run cleaning* (disabled until the plan is approved;
+   switches: in-place — hidden for
    CSV, with a confirm dialog naming the target; skip LLM; overwrite existing output).
+   **Approval panel** above *Run cleaning*: when approved, "Approved by <by> on <local
+   date/time>"; when a draft, the notice "Draft — a person must approve this plan before
+   it can run.", a "Your name" field (last name remembered in `localStorage`) and an
+   *Approve plan* button (disabled while the name is blank or a preview is pending) that
+   calls `POST /api/plans/approve`. Every plan edit (toggle, delete, Edit JSON) clears the
+   approval in the stored plan. A 409 from `/api/runs` shows in the run dialog's error
+   banner.
 4. **Results** — polls `GET /api/runs/{id}` every second while queued/running: progress
    bar with phase label and a *Cancel* button; then summary tiles (rows, cells changed,
    flags = `flags_written`, LLM cells sent/fixed, calls, tokens, duration), a TableView of changes (column
    filter, before → after, sources; "Load more" paging), a flags table, download buttons
    for every file in `files`. Failed/cancelled runs show the error and, for in-place
-   targets, how many rows were already written. Only a 404 from `GET /api/runs/{id}` or a
+   targets, how many rows were already written. The summary shows "Plan approved by <by> on
+   <date>" when `report.approval` is set. Only a 404 from `GET /api/runs/{id}` or a
    source endpoint means "server restarted" (reset to Connect); other errors are banners.
    A top-level error boundary shows unexpected errors with a *Start over* button.
 
@@ -992,3 +1041,4 @@ Changes made to the draft spec, each with the reason.
 5. A visible notice (README + UI Plan step) is enough for data sent to the provider.
 6. No duplicate op in v1.
 7. Planner model: owner chose "Luna 6" via `PLANNER_MODEL`; exact model ID to be confirmed. Code ships with `PLANNER_MODEL` unset (falls back to `LLM_MODEL`).
+8. **Plans need human approval (Phase 5).** A plan must be explicitly approved by a named person before any data is cleaned; plans start as drafts, approval is recorded in the plan (`approval`, bound to a hash of the plan content) and any later change voids it. Enforced at the CLI/API entry points, not in `clean` (§4.5).

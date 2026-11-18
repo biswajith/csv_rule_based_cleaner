@@ -26,3 +26,9 @@ def write_csv(path: Path, rows: list[list[str]], delimiter: str = ",") -> Path:
 def read_csv(path: Path) -> list[list[str]]:
     with path.open(newline="", encoding="utf-8") as f:
         return list(csv.reader(f))
+
+
+def approved(plan: Plan | dict[str, Any], by: str = "Tester") -> dict[str, Any]:
+    """A plan (model or dict) as a JSON-ready dict carrying a valid approval."""
+    p = plan if isinstance(plan, Plan) else Plan.model_validate(plan)
+    return p.with_approval(by).model_dump(mode="json")

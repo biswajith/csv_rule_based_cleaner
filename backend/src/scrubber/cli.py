@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import getpass
 import json
 import os
 import threading
@@ -31,7 +32,7 @@ from .connectors import (
 )
 from .llm import LLMError, make_llm
 from .ops import check_in_place, check_plan
-from .plan import Plan
+from .plan import Plan, approval_error
 from .planner import PlanError, PlanResult, Preview
 
 app = typer.Typer(add_completion=False, no_args_is_help=True,
@@ -57,6 +58,12 @@ NoLLM = Annotated[bool, typer.Option("--no-llm", help="Never call the LLM (llm_f
 MaxCells = Annotated[Optional[int], typer.Option("--max-llm-cells", help="Cap on LLM cells")]
 OutDir = Annotated[Optional[Path], typer.Option("--out", help="Output base directory")]
 Yes = Annotated[bool, typer.Option("--yes", "-y", help="Skip confirmations")]
+SourceOpt = Annotated[Optional[str], typer.Argument(
+    help="Optional: also show a dry-run preview on this source")]
+By = Annotated[Optional[str], typer.Option("--by", help="Approver's name (default: ask)")]
+ApprovedBy = Annotated[Optional[str], typer.Option(
+    "--approved-by", help="Approver's name; required with --yes (--yes alone never approves)")]
+SavePlan = Annotated[Optional[Path], typer.Option("--save-plan", help="Write the approved plan here")]
 
 
 def fail(msg: str, code: int = 1) -> "typer.Exit":
@@ -247,7 +254,8 @@ def plan_cmd(source: Source, rules: Annotated[Path, typer.Option("--rules", help
     with open_or_exit(spec) as conn:
         res = do_plan(conn, rule_list, split_columns(columns))
     output.write_text(res.plan.model_dump_json(indent=2), encoding="utf-8")
-    out.print(f"Plan written to {escape(str(output))}")
+    out.print(f"Draft plan written to {escape(str(output))}. Review it, then approve it with "
+              f"`scrubber approve {escape(str(output))}` before applying.")
 
 
 def load_plan(path: Path) -> Plan:
@@ -260,6 +268,51 @@ def load_plan(path: Path) -> Plan:
     except ValidationError as e:
         msgs = [f"{'.'.join(map(str, x['loc']))}: {x['msg']}" for x in e.errors()]
         raise fail("invalid plan:\n  - " + "\n  - ".join(msgs)) from e
+
+
+def ask_approver(by: str | None) -> str:
+    if by is not None:
+        return by
+    try:
+        default = getpass.getuser()
+    except Exception:  # no passwd entry / no env
+        default = ""
+    return typer.prompt("Approver name", default=default)
+
+
+def approve_plan(plan: Plan, by: str) -> Plan:
+    try:
+        return plan.with_approval(by)
+    except ValueError as e:
+        raise usage(str(e)) from e
+
+
+@app.command("approve")
+def approve_cmd(plan: Annotated[Path, typer.Argument(help="Plan JSON file")], source: SourceOpt = None,
+                by: By = None, yes: Yes = False, delimiter: Delimiter = ",",
+                encoding: Encoding = "utf-8-sig", table: Table_ = None, schema: Schema = None,
+                key_column: KeyColumn = None, db: Db = None, collection: Collection = None,
+                filter: Filter = None) -> None:
+    """Review a plan and record a named person's approval in the plan file."""
+    plan_obj = load_plan(plan)
+    show_plan(plan_obj)
+    if source is not None:
+        spec = build_spec(source, delimiter=delimiter, encoding=encoding, table=table,
+                          schema=schema, key_column=key_column, db=db, collection=collection,
+                          filter_=filter)
+        with open_or_exit(spec) as conn:
+            try:
+                show_preview(planner.preview(conn, plan_obj))
+            except PlanError as e:
+                raise fail("invalid plan for this source:\n  - " + "\n  - ".join(e.errors)) from e
+    name = ask_approver(by)
+    approved = approve_plan(plan_obj, name)
+    who = approved.approval.by  # type: ignore[union-attr]  # trimmed
+    if not yes and not typer.confirm(f"Approve this plan as {who}?", default=False):
+        raise typer.Exit(1)
+    plan.write_text(approved.model_dump_json(indent=2), encoding="utf-8")
+    out.print(f"Plan {escape(str(plan))} approved by {escape(who)} at "
+              f"{approved.approval.at:%Y-%m-%d %H:%M:%S} UTC.")  # type: ignore[union-attr]
 
 
 def do_apply(spec, conn: Connector, plan: Plan, *, in_place: bool, overwrite: bool, no_llm: bool,
@@ -335,6 +388,8 @@ def apply_cmd(source: Source, plan: Annotated[Path, typer.Option("--plan", help=
     spec = build_spec(source, delimiter=delimiter, encoding=encoding, table=table, schema=schema,
                       key_column=key_column, db=db, collection=collection, filter_=filter)
     plan_obj = load_plan(plan)
+    if (msg := approval_error(plan_obj)) is not None:
+        raise usage(f"{msg} Run `scrubber approve {plan}`.")
     with open_or_exit(spec) as conn:
         do_apply(spec, conn, plan_obj, in_place=in_place, overwrite=overwrite, no_llm=no_llm,
                  max_llm_cells=max_llm_cells, out_dir=out_dir, yes=yes)
@@ -342,20 +397,29 @@ def apply_cmd(source: Source, plan: Annotated[Path, typer.Option("--plan", help=
 
 @app.command("run")
 def run_cmd(source: Source, rules: Annotated[Path, typer.Option("--rules", help="Rules file")],
-            yes: Yes = False, columns: Columns = None, in_place: InPlace = False,
+            yes: Yes = False, approved_by: ApprovedBy = None, save_plan: SavePlan = None,
+            columns: Columns = None, in_place: InPlace = False,
             overwrite: Overwrite = False, no_llm: NoLLM = False, max_llm_cells: MaxCells = None,
             out_dir: OutDir = None, delimiter: Delimiter = ",", encoding: Encoding = "utf-8-sig",
             table: Table_ = None, schema: Schema = None, key_column: KeyColumn = None,
             db: Db = None, collection: Collection = None, filter: Filter = None) -> None:
-    """Plan, show the preview, confirm, then apply."""
+    """Plan, show the preview, record your approval, then apply."""
+    if yes and approved_by is None:
+        raise usage("--yes does not approve a plan: pass --approved-by NAME as well")
     spec = build_spec(source, delimiter=delimiter, encoding=encoding, table=table, schema=schema,
                       key_column=key_column, db=db, collection=collection, filter_=filter)
     rule_list = read_rules(rules)
     with open_or_exit(spec) as conn:
         res = do_plan(conn, rule_list, split_columns(columns))
-        if not yes and not typer.confirm("Proceed?", default=False):
+        name = ask_approver(approved_by)
+        plan_obj = approve_plan(res.plan, name)
+        who = plan_obj.approval.by  # type: ignore[union-attr]  # trimmed
+        if not yes and not typer.confirm(f"Approve this plan as {who} and apply?", default=False):
             raise typer.Exit(1)
-        do_apply(spec, conn, res.plan, in_place=in_place, overwrite=overwrite, no_llm=no_llm,
+        if save_plan is not None:
+            save_plan.write_text(plan_obj.model_dump_json(indent=2), encoding="utf-8")
+            out.print(f"Approved plan written to {escape(str(save_plan))}")
+        do_apply(spec, conn, plan_obj, in_place=in_place, overwrite=overwrite, no_llm=no_llm,
                  max_llm_cells=max_llm_cells, out_dir=out_dir, yes=yes)
 
 

@@ -8,6 +8,7 @@ import mongomock
 import pytest
 from fastapi.testclient import TestClient
 from test_sql_connector import make_db
+from util import approved
 
 from scrubber.api import create_app
 from scrubber.config import get_settings
@@ -68,7 +69,7 @@ def test_full_flow_csv(client):
     pv = client.post("/api/preview", json={"source_id": sid, "plan": PLAN}).json()["preview"]
     assert pv["sampled_rows"] == 3 and pv["columns"][0]["column"] == "name"
 
-    run_id = client.post("/api/runs", json={"source_id": sid, "plan": PLAN}).json()["run_id"]
+    run_id = client.post("/api/runs", json={"source_id": sid, "plan": approved(PLAN)}).json()["run_id"]
     st = wait(client, run_id)
     assert st["status"] == "done" and st["report"]["rows"] == 3
     assert set(st["files"]) == {"changes.csv", "flags.csv", "my_leads_.cleaned.csv", "plan.json",
@@ -131,7 +132,8 @@ def test_plan_repair_failure_is_422():
 def test_invalid_plan_422_with_errors(client):
     sid = upload(client).json()["source_id"]
     for url in ("/api/preview", "/api/runs"):
-        r = client.post(url, json={"source_id": sid, "plan": {"columns": [{"column": "zz", "ops": [TRIM]}]}})
+        r = client.post(url, json={"source_id": sid, "plan": approved(
+            {"columns": [{"column": "zz", "ops": [TRIM]}]})})
         assert r.status_code == 422 and r.json()["errors"] and "zz" in r.json()["errors"][0]
         r = client.post(url, json={"source_id": sid, "plan": {"columns": [
             {"column": "name", "ops": [{"op": "trim", "bogus": 1}]}]}})
@@ -149,7 +151,7 @@ def test_unknown_source_and_run(client):
 
 def test_csv_in_place_rejected(client):
     sid = upload(client).json()["source_id"]
-    r = client.post("/api/runs", json={"source_id": sid, "plan": PLAN, "in_place": True})
+    r = client.post("/api/runs", json={"source_id": sid, "plan": approved(PLAN), "in_place": True})
     assert r.status_code == 400
 
 
@@ -162,15 +164,15 @@ def test_sql_source_flow_409_overwrite_in_place(tmp_path):
         assert src["can_in_place"] and src["count"] == 4 and "url" not in src
         sid = src["source_id"]
         plan = {"columns": [{"column": "email", "ops": [TRIM]}]}
-        run = c.post("/api/runs", json={"source_id": sid, "plan": plan}).json()["run_id"]
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved(plan)}).json()["run_id"]
         assert wait(c, run)["status"] == "done"
-        r = c.post("/api/runs", json={"source_id": sid, "plan": plan})
+        r = c.post("/api/runs", json={"source_id": sid, "plan": approved(plan)})
         assert r.status_code == 409 and "overwrite" in r.json()["detail"]
-        run = c.post("/api/runs", json={"source_id": sid, "plan": plan, "overwrite": True}).json()["run_id"]
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved(plan), "overwrite": True}).json()["run_id"]
         assert wait(c, run)["status"] == "done"
         # in-place; key column may not be planned
-        r = c.post("/api/runs", json={"source_id": sid, "plan": {"columns": [
-            {"column": "name", "ops": [TRIM]}]}, "in_place": True})
+        r = c.post("/api/runs", json={"source_id": sid, "plan": approved({"columns": [
+            {"column": "name", "ops": [TRIM]}]}), "in_place": True})
         st = wait(c, r.json()["run_id"])
         assert st["status"] == "done" and st["report"]["in_place"]
         assert st["files"] == ["changes.csv", "flags.csv", "plan.json", "report.json"]
@@ -194,8 +196,8 @@ def test_mongo_source(tmp_path):
         assert r.status_code == 200 and r.json()["columns"][0]["name"] == "name"
         assert "pw" not in r.text
         sid = r.json()["source_id"]
-        run = c.post("/api/runs", json={"source_id": sid, "plan": {"columns": [
-            {"column": "name", "ops": [TRIM]}]}}).json()["run_id"]
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved({"columns": [
+            {"column": "name", "ops": [TRIM]}]})}).json()["run_id"]
         assert wait(c, run)["status"] == "done"
         assert m.db.c_cleaned.find_one({"_id": 1})["name"] == "a"
         ch = c.get(f"/api/runs/{run}/changes").json()
@@ -212,11 +214,11 @@ def test_llm_fix_run_uses_injected_llm():
     llm = FakeLLM(fix)
     with make_client(llm) as c:
         sid = upload(c).json()["source_id"]
-        run = c.post("/api/runs", json={"source_id": sid, "plan": plan}).json()["run_id"]
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved(plan)}).json()["run_id"]
         st = wait(c, run)
         assert st["status"] == "done" and st["report"]["llm"]["cells_fixed"] == 2
         # no_llm needs no LLM at all
-        run = c.post("/api/runs", json={"source_id": sid, "plan": plan, "no_llm": True}).json()["run_id"]
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved(plan), "no_llm": True}).json()["run_id"]
         assert wait(c, run)["report"]["llm"]["calls"] == 0
 
     def boom(planner):
@@ -224,8 +226,8 @@ def test_llm_fix_run_uses_injected_llm():
 
     with TestClient(create_app(port=8000, llm_factory=boom), base_url=BASE) as c:
         sid = upload(c).json()["source_id"]
-        assert c.post("/api/runs", json={"source_id": sid, "plan": plan}).status_code == 400
-        run = c.post("/api/runs", json={"source_id": sid, "plan": plan, "no_llm": True}).json()["run_id"]
+        assert c.post("/api/runs", json={"source_id": sid, "plan": approved(plan)}).status_code == 400
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved(plan), "no_llm": True}).json()["run_id"]
         assert wait(c, run)["status"] == "done"
 
 
@@ -262,7 +264,7 @@ def test_dev_and_allow_remote_modes():
 
 def test_run_id_and_file_name_validation(client):
     sid = upload(client).json()["source_id"]
-    run = client.post("/api/runs", json={"source_id": sid, "plan": PLAN}).json()["run_id"]
+    run = client.post("/api/runs", json={"source_id": sid, "plan": approved(PLAN)}).json()["run_id"]
     wait(client, run)
     for bad in ("abc", "20200101-000000-ABCD", "%2e%2e"):
         assert client.get(f"/api/runs/{bad}").status_code == 404
@@ -298,7 +300,7 @@ def test_upload_limits_and_errors(monkeypatch):
 def test_finished_run_readable_after_restart():
     with make_client() as c:
         sid = upload(c).json()["source_id"]
-        run = c.post("/api/runs", json={"source_id": sid, "plan": PLAN}).json()["run_id"]
+        run = c.post("/api/runs", json={"source_id": sid, "plan": approved(PLAN)}).json()["run_id"]
         wait(c, run)
     with make_client() as c2:  # new process: empty registries
         st = c2.get(f"/api/runs/{run}").json()
@@ -321,8 +323,8 @@ def test_cancel_queued_run(monkeypatch):
     monkeypatch.setattr(runs_mod, "clean", slow_clean)
     with make_client() as c:
         sid = upload(c).json()["source_id"]
-        r1 = c.post("/api/runs", json={"source_id": sid, "plan": PLAN}).json()["run_id"]
-        r2 = c.post("/api/runs", json={"source_id": sid, "plan": PLAN}).json()["run_id"]
+        r1 = c.post("/api/runs", json={"source_id": sid, "plan": approved(PLAN)}).json()["run_id"]
+        r2 = c.post("/api/runs", json={"source_id": sid, "plan": approved(PLAN)}).json()["run_id"]
         assert c.get(f"/api/runs/{r2}").json()["status"] == "queued"
         assert c.post(f"/api/runs/{r2}/cancel").status_code == 200
         gate.set()

@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
+import json
+from datetime import datetime, timezone
 from functools import cached_property
 from typing import Annotated, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, StringConstraints
 
 
 class _Model(BaseModel):
@@ -128,14 +131,49 @@ class ColumnPlan(_Model):
     ops: list[Op] = Field(default_factory=list)
 
 
+class Approval(_Model):
+    """A person's sign-off on one exact plan (spec §4.5)."""
+
+    by: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=100)]
+    at: datetime
+    plan_hash: str
+
+
 class Plan(_Model):
     version: Literal[1] = 1
     rules: list[str] = Field(default_factory=list)
     columns: list[ColumnPlan] = Field(default_factory=list)
     notes: list[str] = Field(default_factory=list)
+    approval: Approval | None = None
+
+    def content_hash(self) -> str:
+        """SHA-256 of the canonical JSON of everything except `approval`."""
+        body = json.dumps(self.model_dump(mode="json", exclude={"approval"}), sort_keys=True,
+                          separators=(",", ":"), ensure_ascii=False)
+        return hashlib.sha256(body.encode("utf-8")).hexdigest()
+
+    def is_approved(self) -> bool:
+        return self.approval is not None and self.approval.plan_hash == self.content_hash()
+
+    def with_approval(self, by: str) -> Plan:
+        """A copy approved by `by` now. Raises ValueError when the name is blank or too long."""
+        try:
+            ap = Approval(by=by, at=datetime.now(timezone.utc), plan_hash=self.content_hash())
+        except ValueError as e:  # pydantic ValidationError is a ValueError
+            raise ValueError("Approver name must be 1-100 characters") from e
+        return self.model_copy(update={"approval": ap})
 
     def has_llm_fix(self) -> bool:
         return any(o.enabled and isinstance(o, LLMFix) for cp in self.columns for o in cp.ops)
+
+
+def approval_error(plan: Plan) -> str | None:
+    """Why `plan` may not run (None when approved)."""
+    if plan.is_approved():
+        return None
+    if plan.approval is None:
+        return "Plan is not approved. Approve it before running."
+    return f"Plan changed after it was approved by {plan.approval.by}. Approve it again."
 
 
 class PlannerOutput(_Model):

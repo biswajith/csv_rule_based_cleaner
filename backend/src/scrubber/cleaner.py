@@ -21,7 +21,7 @@ from .ops import (
     Answer, LLMKey, OpStat, apply_row, cell_text, check_in_place, check_plan, llm_op,
     must_match_patterns, target_date_format,
 )
-from .plan import LLMFix, Plan
+from .plan import Approval, LLMFix, Plan
 from .planner import PlanError
 from .prompts import FIXER_SYSTEM, fixer_user
 
@@ -70,6 +70,7 @@ class RunReport(BaseModel):
     flags_written: int = 0       # lines in flags.csv
     columns: list[ColumnReport] = []
     llm: LLMReport = LLMReport()
+    approval: Approval | None = None
 
 
 def new_run_id() -> str:
@@ -222,7 +223,8 @@ def clean(connector: Connector, plan: Plan, llm: LLM | None, *, in_place: bool =
                  if o.enabled and isinstance(o, LLMFix)}
     cap = s.max_llm_cells if max_llm_cells is None else max_llm_cells
     report = RunReport(run_id=run_dir.name, source=connector.description, target=writer.target,
-                       in_place=in_place, llm=LLMReport(model=llm.model_name if llm else None))
+                       in_place=in_place, llm=LLMReport(model=llm.model_name if llm else None),
+                       approval=plan.approval)
     started = datetime.now(timezone.utc)
     t0 = monotonic()
     (run_dir / "plan.json").write_text(plan.model_dump_json(indent=2), encoding="utf-8")

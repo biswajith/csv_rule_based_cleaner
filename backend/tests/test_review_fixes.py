@@ -6,7 +6,7 @@ import itertools
 import json
 
 import pytest
-from util import infos, mkplan
+from util import approved, infos, mkplan
 
 from scrubber.ops import _accept, apply_row, check_plan, op_parse_date
 from scrubber.plan import ParseDate
@@ -278,8 +278,8 @@ def test_changes_and_flags_empty_for_run_without_files(monkeypatch):
     monkeypatch.setattr(runs_mod, "clean", lambda *a, **kw: (gate.wait(5), real(*a, **kw))[1])
     with api_client() as c:
         sid = upload(c).json()["source_id"]
-        r1 = c.post("/api/runs", json={"source_id": sid, "plan": APLAN}).json()["run_id"]
-        r2 = c.post("/api/runs", json={"source_id": sid, "plan": APLAN}).json()["run_id"]
+        r1 = c.post("/api/runs", json={"source_id": sid, "plan": approved(APLAN)}).json()["run_id"]
+        r2 = c.post("/api/runs", json={"source_id": sid, "plan": approved(APLAN)}).json()["run_id"]
         c.post(f"/api/runs/{r2}/cancel")
         gate.set()
         for _ in range(200):

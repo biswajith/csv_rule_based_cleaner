@@ -193,6 +193,11 @@ function Summary({ report }: { report: RunReport }) {
   const l = report.llm;
   return (
     <Flex direction="column" gap="size-100">
+      {report.approval && (
+        <Text>
+          Plan approved by {report.approval.by} on {new Date(report.approval.at).toLocaleString()}
+        </Text>
+      )}
       <Text>
         {report.source} → {report.target}
         {report.in_place ? " (in place)" : ""}

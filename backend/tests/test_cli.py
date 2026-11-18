@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 from test_sql_connector import make_db
 from typer.testing import CliRunner
-from util import write_csv
+from util import approved, write_csv
 
 import scrubber.cli as cli
 from scrubber.cleaner import RunReport
@@ -32,7 +32,7 @@ def csv_file(tmp_path):
 @pytest.fixture
 def plan_file(tmp_path):
     p = tmp_path / "plan.json"
-    p.write_text(json.dumps(PLAN))
+    p.write_text(json.dumps(approved(PLAN)))
     return p
 
 
@@ -96,8 +96,9 @@ def test_missing_csv_is_failure_exit_1(tmp_path):
 
 def test_apply_no_llm_end_to_end_golden(tmp_path):
     out = tmp_path / "out"
-    r = invoke("apply", DATA / "leads.csv", "--plan", DATA / "leads_plan.json", "--no-llm",
-               "--out", out)
+    plan = tmp_path / "leads_plan.json"
+    plan.write_text(json.dumps(approved(json.loads((DATA / "leads_plan.json").read_text()))))
+    r = invoke("apply", DATA / "leads.csv", "--plan", plan, "--no-llm", "--out", out)
     assert r.exit_code == 0, r.output
     (run_dir,) = list(out.iterdir())
     assert sorted(p.name for p in run_dir.iterdir()) == [
@@ -115,7 +116,7 @@ def test_apply_plan_errors(tmp_path, csv_file, plan_file):
     r = invoke("apply", csv_file, "--plan", bad, "--out", tmp_path / "o")
     assert r.exit_code == 1 and "invalid plan" in r.output
     unk = tmp_path / "unk.json"
-    unk.write_text(json.dumps({"columns": [{"column": "zzz", "ops": [TRIM]}]}))
+    unk.write_text(json.dumps(approved({"columns": [{"column": "zzz", "ops": [TRIM]}]})))
     r = invoke("apply", csv_file, "--plan", unk, "--out", tmp_path / "o")
     assert r.exit_code == 1 and "zzz" in r.output
     assert not (tmp_path / "o").exists()
@@ -140,13 +141,13 @@ def test_make_llm_only_built_when_needed(tmp_path, csv_file, monkeypatch):
 
     monkeypatch.setattr(cli, "make_llm", fake_make)
     p = tmp_path / "llm.json"
-    p.write_text(json.dumps(LLM_PLAN))
+    p.write_text(json.dumps(approved(LLM_PLAN)))
     r = invoke("apply", csv_file, "--plan", p, "--no-llm", "--out", tmp_path / "o1")
     assert r.exit_code == 0 and calls == []
     r = invoke("apply", csv_file, "--plan", p, "--out", tmp_path / "o2")
     assert r.exit_code == 1 and "OPENAI_API_KEY" in r.output and calls == [False]
     plain = tmp_path / "plain.json"
-    plain.write_text(json.dumps(PLAN))
+    plain.write_text(json.dumps(approved(PLAN)))
     assert invoke("apply", csv_file, "--plan", plain, "--out", tmp_path / "o3").exit_code == 0
     assert calls == [False]
 
@@ -162,7 +163,7 @@ def test_apply_exit_codes_for_failed_and_cancelled(tmp_path, csv_file, plan_file
 def test_apply_sql_new_table_exists_overwrite_and_in_place(tmp_path):
     url = make_db(tmp_path)
     p = tmp_path / "p.json"
-    p.write_text(json.dumps({"columns": [{"column": "email", "ops": [TRIM]}]}))
+    p.write_text(json.dumps(approved({"columns": [{"column": "email", "ops": [TRIM]}]})))
     base = ["apply", url, "--table", "people", "--plan", p, "--out", tmp_path / "o"]
     r = invoke(*base)
     assert r.exit_code == 0, r.output
@@ -254,16 +255,18 @@ def test_run_command(tmp_path, csv_file, monkeypatch):
     rules.write_text("Trim names\n")
     planner_llm(monkeypatch)
     out = tmp_path / "out"
-    r = invoke("run", csv_file, "--rules", rules, "--out", out, input="n\n")
-    assert r.exit_code == 1 and "Proceed?" in r.stdout and not out.exists()
+    r = invoke("run", csv_file, "--rules", rules, "--out", out, input="Ann\nn\n")
+    assert r.exit_code == 1 and "Approve this plan as Ann and apply?" in r.stdout and not out.exists()
     planner_llm(monkeypatch)
-    r = invoke("run", csv_file, "--rules", rules, "--out", out, input="y\n")
+    r = invoke("run", csv_file, "--rules", rules, "--out", out, input="Ann\ny\n")
     assert r.exit_code == 0, r.output
     (run_dir,) = list(out.iterdir())
     assert (run_dir / "in.cleaned.csv").read_text().splitlines()[1] == "1,a"
+    assert json.loads((run_dir / "report.json").read_text())["approval"]["by"] == "Ann"
     planner_llm(monkeypatch)
-    r = invoke("run", csv_file, "--rules", rules, "--out", tmp_path / "out2", "--yes")
-    assert r.exit_code == 0 and "Proceed?" not in r.stdout
+    r = invoke("run", csv_file, "--rules", rules, "--out", tmp_path / "out2", "--yes",
+               "--approved-by", "Bo")
+    assert r.exit_code == 0 and "apply?" not in r.stdout
 
 
 # ---------------------------------------------------------------- serve

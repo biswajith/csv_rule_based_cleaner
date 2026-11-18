@@ -8,8 +8,10 @@ collections) from plain-English rules:
 2. **Plan** — one LLM call turns your rules + the profile into a JSON *plan*: per column,
    an ordered list of deterministic ops (regex, lookup tables, case, trim, date parsing,
    validation). The LLM delegates the work to code; it does not clean rows itself.
-3. **Review** — a dry run on the sample shows what each op would change or flag. Edit,
-   disable or delete ops; save the plan and reuse it on new data at zero LLM cost.
+3. **Review & approve** — a dry run on the sample shows what each op would change or flag.
+   Edit, disable or delete ops; save the plan and reuse it on new data at zero LLM cost.
+   A named person must approve the plan before anything runs; editing it afterwards voids
+   the approval.
 4. **Clean** — code applies the plan to every record. Only cells the plan explicitly
    marks for judgement (`llm_fix`) go back to the LLM — collected across the whole
    dataset, de-duplicated and sent in batches, with a hard budget.
@@ -47,7 +49,7 @@ installed today; another provider is a config change plus its `langchain-*` pack
 ```
 
 Open http://127.0.0.1:8000 → Connect (upload a CSV, or a SQL URL / MongoDB URI) →
-write rules → review the plan → run → inspect changes and flags, download results.
+write rules → review and approve the plan → run → inspect changes and flags, download results.
 The server binds to localhost only and has no authentication.
 
 ## CLI
@@ -60,11 +62,20 @@ The server binds to localhost only and has no authentication.
 .venv/bin/scrubber plan examples/leads.csv --rules examples/rules.txt -o plan.json
 ```
 
+`plan` writes a draft. Review it (edit the JSON if you like), then record your approval in
+the file; the preview on a source is optional but recommended:
+
+```bash
+.venv/bin/scrubber approve plan.json examples/leads.csv
+```
+
 ```bash
 .venv/bin/scrubber apply examples/leads.csv --plan plan.json
 ```
 
-`run` does plan → preview → confirm → apply in one go. Sources:
+`apply` refuses a plan that is not approved, or that changed after approval. `run` does
+plan → preview → approve → apply in one go (it asks for your name and confirmation;
+`--yes` needs `--approved-by NAME`, and `--save-plan plan.json` keeps the approved plan). Sources:
 
 | Source | Example |
 |---|---|

@@ -29,7 +29,7 @@ from .connectors import (
 )
 from .llm import LLM, LLMError, make_llm
 from .ops import check_in_place, check_plan
-from .plan import Plan
+from .plan import Plan, approval_error
 from .planner import PlanError
 from .runs import (
     RUN_ID_RE,
@@ -102,6 +102,11 @@ class PlanRequest(BaseModel):
 class PreviewRequest(BaseModel):
     source_id: str
     plan: dict[str, Any]
+
+
+class ApproveRequest(BaseModel):
+    plan: dict[str, Any]
+    by: str
 
 
 class RunRequest(BaseModel):
@@ -271,13 +276,31 @@ def create_app(*, port: int, allow_remote: bool = False, dev: bool | None = None
     def preview(req: PreviewRequest) -> dict[str, Any]:
         entry = entry_or_404(req.source_id)
         plan = _parse_plan(req.plan)
+        stale = plan.approval if plan.approval is not None and not plan.is_approved() else None
+        if stale is not None:
+            plan = plan.model_copy(update={"approval": None})
         with sources.open_entry(entry) as conn:
-            return {"plan": plan.model_dump(mode="json"), "preview": planner.preview(conn, plan)}
+            pv = planner.preview(conn, plan)
+        if stale is not None:
+            pv.warnings.append(f"Approval by {stale.by} was removed: the plan changed after it "
+                               "was approved.")
+        return {"plan": plan.model_dump(mode="json"), "preview": pv}
+
+    @app.post("/api/plans/approve")
+    def approve(req: ApproveRequest) -> dict[str, Any]:
+        plan = _parse_plan(req.plan)
+        try:
+            approved = plan.with_approval(req.by)
+        except ValueError as e:
+            return _err(422, str(e))
+        return {"plan": approved.model_dump(mode="json")}
 
     @app.post("/api/runs")
-    def start_run(req: RunRequest) -> dict[str, str]:
+    def start_run(req: RunRequest) -> Any:
         entry = entry_or_404(req.source_id)
         plan = _parse_plan(req.plan)
+        if (msg := approval_error(plan)) is not None:
+            return _err(409, msg)
         if req.in_place and not entry.can_in_place:
             raise HTTPException(400, "In-place cleaning is not supported for CSV sources")
         # Preconditions are checked here so the client gets 400/409/422/502 immediately;

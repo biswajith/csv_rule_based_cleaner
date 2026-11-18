@@ -94,11 +94,19 @@ export interface ColumnPlan {
   ops: Op[];
 }
 
+export interface Approval {
+  by: string;
+  at: string;
+  plan_hash: string;
+}
+
 export interface Plan {
   version: number;
   rules: string[];
   columns: ColumnPlan[];
   notes: string[];
+  /** Set only when a person approved exactly this plan; any edit clears it. */
+  approval?: Approval | null;
 }
 
 // ---- Preview ----
@@ -156,6 +164,7 @@ export type RunState = "queued" | "running" | "done" | "failed" | "cancelled";
 export type Phase = "scanning" | "resolving" | "writing";
 
 export interface RunReport {
+  approval?: Approval | null;
   run_id: string;
   status: "done" | "failed" | "cancelled";
   error: string | null;

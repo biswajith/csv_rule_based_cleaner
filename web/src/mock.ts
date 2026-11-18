@@ -127,6 +127,12 @@ export const mock = {
     if (!p || !Array.isArray(p.columns)) throw new ApiError(422, "Invalid plan", ["columns: field required"]);
     return { plan: p, preview: makePreview(p) };
   },
+  approvePlan: async (p: Plan, by: string): Promise<{ plan: Plan }> => {
+    await delay(300);
+    const name = (by ?? "").trim();
+    if (!name) throw new ApiError(422, "Approver name is required");
+    return { plan: { ...p, approval: { by: name, at: new Date().toISOString(), plan_hash: "mock".padEnd(64, "0") } } };
+  },
   startRun: async (_id: string, _p: Plan, _o: RunOptions): Promise<{ run_id: string }> => {
     await delay(200);
     runStart = Date.now();

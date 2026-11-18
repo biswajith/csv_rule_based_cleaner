@@ -51,6 +51,8 @@ export type Action =
   | { type: "preview"; sourceId: string; revision: number; preview: Preview; plan?: Plan }
   /** Edit JSON: the server accepted a whole plan (with a column replaced) built from `revision`. */
   | { type: "plan_replaced"; sourceId: string; revision: number; plan: Plan; preview: Preview }
+  /** The server recorded an approval on the plan built from `revision`. */
+  | { type: "plan_approved"; sourceId: string; revision: number; plan: Plan }
   | { type: "toggle_op"; col: number; op: number; enabled: boolean }
   | { type: "delete_op"; col: number; op: number }
   | { type: "run_started"; runId: string }
@@ -62,7 +64,7 @@ function withColumn(plan: Plan, index: number, f: (c: ColumnPlan) => ColumnPlan)
 
 /** Apply a local plan edit: new plan, new revision, preview marked stale. */
 function edited(state: AppState, plan: Plan): AppState {
-  return { ...state, plan, planRevision: state.planRevision + 1, previewStale: true };
+  return { ...state, plan: { ...plan, approval: null }, planRevision: state.planRevision + 1, previewStale: true };
 }
 
 const isCurrent = (state: AppState, sourceId: string) => state.source?.source_id === sourceId;
@@ -127,11 +129,14 @@ export function reducer(state: AppState, a: Action): AppState {
       if (!isCurrent(state, a.sourceId) || !state.plan || a.revision !== state.planRevision) return state;
       return {
         ...state,
-        plan: structuredClone(a.plan),
+        plan: a.plan.approval ? { ...structuredClone(a.plan), approval: null } : structuredClone(a.plan), // an edit voids any approval
         planRevision: state.planRevision + 1,
         preview: a.preview,
         previewStale: false,
       };
+    case "plan_approved":
+      if (!isCurrent(state, a.sourceId) || !state.plan || a.revision !== state.planRevision) return state;
+      return { ...state, plan: structuredClone(a.plan) };
     case "toggle_op":
       if (!state.plan) return state;
       return edited(

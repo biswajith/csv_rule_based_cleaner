@@ -174,7 +174,7 @@ class RunRegistry:
 
 
 def _write_failed_report(handle: RunHandle, plan: Plan, error: str, status: str = "failed") -> RunReport:
-    rep = RunReport(run_id=handle.run_id, status=status, error=error)
+    rep = RunReport(run_id=handle.run_id, status=status, error=error, approval=plan.approval)
     handle.run_dir.mkdir(parents=True, exist_ok=True)
     (handle.run_dir / "plan.json").write_text(plan.model_dump_json(indent=2), encoding="utf-8")
     (handle.run_dir / "report.json").write_text(rep.model_dump_json(indent=2), encoding="utf-8")

@@ -131,3 +131,52 @@ describe("no-effect badge rule", () => {
     expect(hasNoEffect({ op: "llm_fix", instruction: "i" }, zero, col(3))).toBe(false);
   });
 });
+
+describe("plan approval", () => {
+  const ap = { by: "Ann", at: "2026-01-01T00:00:00Z", plan_hash: "h" };
+  const approvedPlan = () => mkPlan({ approval: ap });
+  const approvedState = () =>
+    run([
+      { type: "source", source: src("s1") },
+      { type: "plan_loaded", sourceId: "s1", plan: approvedPlan(), preview: mkPreview(1) },
+    ]);
+
+  it("keeps an approval that arrives with a loaded plan", () => {
+    expect(approvedState().plan?.approval).toEqual(ap);
+  });
+
+  it("toggle and delete clear the approval", () => {
+    expect(reducer(approvedState(), { type: "toggle_op", col: 0, op: 0, enabled: false }).plan?.approval).toBeNull();
+    expect(reducer(approvedState(), { type: "delete_op", col: 0, op: 0 }).plan?.approval).toBeNull();
+  });
+
+  it("plan_replaced (Edit JSON) clears the approval", () => {
+    const s = approvedState();
+    const r = reducer(s, { type: "plan_replaced", sourceId: "s1", revision: s.planRevision, plan: approvedPlan(), preview: mkPreview(2) });
+    expect(r.plan?.approval).toBeNull();
+  });
+
+  it("plan_approved applies for the current revision without bumping it", () => {
+    const s = withPlan();
+    const r = reducer(s, { type: "plan_approved", sourceId: "s1", revision: s.planRevision, plan: approvedPlan() });
+    expect(r.plan?.approval).toEqual(ap);
+    expect(r.planRevision).toBe(s.planRevision);
+    expect(r.previewStale).toBe(false);
+  });
+
+  it("ignores a stale or foreign plan_approved", () => {
+    const s0 = withPlan();
+    const old = s0.planRevision;
+    const s1 = reducer(s0, { type: "toggle_op", col: 0, op: 0, enabled: false });
+    expect(reducer(s1, { type: "plan_approved", sourceId: "s1", revision: old, plan: approvedPlan() })).toBe(s1);
+    expect(reducer(s0, { type: "plan_approved", sourceId: "other", revision: old, plan: approvedPlan() })).toBe(s0);
+  });
+
+  it("planned resets approval to what the server returned", () => {
+    const s = run([
+      { type: "plan_loaded", sourceId: "s1", plan: approvedPlan(), preview: mkPreview(1) },
+    ], run([{ type: "source", source: src("s1") }]));
+    const r = reducer(s, { type: "planned", sourceId: "s1", result: { plan: mkPlan({ approval: null }), preview: mkPreview(3), usage: { calls: 1, failed_calls: 0, input_tokens: 0, output_tokens: 0 } } });
+    expect(r.plan?.approval).toBeNull();
+  });
+});

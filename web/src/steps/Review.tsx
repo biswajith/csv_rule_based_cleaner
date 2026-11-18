@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import {
-  Button, Content, Flex, Heading, InlineAlert, ProgressCircle, Text,
+  Button, Content, Flex, Heading, InlineAlert, ProgressCircle, StatusLight, Text, TextField,
 } from "@adobe/react-spectrum";
 import { api } from "../api";
 import { ApiError } from "../apiError";
@@ -10,9 +10,28 @@ import { RunButton } from "./RunDialog";
 import type { Action, AppState } from "../state";
 import type { ColumnPlan } from "../types";
 
+const NAME_KEY = "scrubber.approver";
+function loadName(): string {
+  try {
+    return localStorage.getItem(NAME_KEY) ?? "";
+  } catch {
+    return "";
+  }
+}
+function saveName(name: string) {
+  try {
+    localStorage.setItem(NAME_KEY, name);
+  } catch {
+    /* storage unavailable */
+  }
+}
+
 export function Review({ state, dispatch }: { state: AppState; dispatch: (a: Action) => void }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<ApiError | null>(null);
+  const [approver, setApprover] = useState(loadName);
+  const [approving, setApproving] = useState(false);
+  const [approveError, setApproveError] = useState<ApiError | null>(null);
   const { plan, preview, source, previewStale } = state;
   const revisionRef = useRef(state.planRevision);
   revisionRef.current = state.planRevision;
@@ -58,6 +77,23 @@ export function Review({ state, dispatch }: { state: AppState; dispatch: (a: Act
     dispatch({ type: "plan_replaced", sourceId: source!.source_id, revision, plan: r.plan, preview: r.preview });
   }
 
+  async function approve() {
+    const revision = state.planRevision;
+    const by = approver.trim();
+    setApproving(true);
+    setApproveError(null);
+    try {
+      const r = await api.approvePlan(plan!, by);
+      saveName(by);
+      // Dropped by the reducer if the plan was edited while the request was in flight.
+      dispatch({ type: "plan_approved", sourceId: source!.source_id, revision, plan: r.plan });
+    } catch (e) {
+      setApproveError(handle404(e));
+    } finally {
+      setApproving(false);
+    }
+  }
+
   function downloadPlan() {
     const blob = new Blob([JSON.stringify(plan, null, 2) + "\n"], { type: "application/json" });
     const url = URL.createObjectURL(blob);
@@ -72,10 +108,44 @@ export function Review({ state, dispatch }: { state: AppState; dispatch: (a: Act
 
   const maxCells = state.config?.max_llm_cells;
   const warnings = preview.warnings;
+  const approved = !!plan.approval && !previewStale;
 
   return (
     <Flex direction="column" gap="size-200">
       <Heading level={2}>Review the plan</Heading>
+
+      <Flex direction="column" gap="size-100">
+        <Heading level={3}>Approval</Heading>
+        {plan.approval ? (
+          <StatusLight variant="positive">
+            Approved by {plan.approval.by} on {new Date(plan.approval.at).toLocaleString()}
+          </StatusLight>
+        ) : (
+          <>
+            <InlineAlert variant="notice">
+              <Heading>Draft — not approved</Heading>
+              <Content>A person must approve this plan before it can run.</Content>
+            </InlineAlert>
+            <Flex gap="size-150" alignItems="end" wrap>
+              <TextField label="Your name" value={approver} onChange={setApprover} maxLength={100} />
+              <Button
+                variant="accent"
+                isPending={approving}
+                isDisabled={approver.trim() === "" || busy || previewStale}
+                onPress={approve}
+              >
+                Approve plan
+              </Button>
+            </Flex>
+            <ErrorBanner error={approveError} title="Could not approve the plan" />
+          </>
+        )}
+        {!approved && (
+          <Text UNSAFE_style={{ opacity: 0.7 }}>
+            Run cleaning stays disabled until the plan is approved. Editing the plan removes the approval.
+          </Text>
+        )}
+      </Flex>
 
       <Flex gap="size-150" alignItems="center" wrap>
         <Button variant="secondary" isPending={busy} onPress={rerun}>
@@ -84,7 +154,7 @@ export function Review({ state, dispatch }: { state: AppState; dispatch: (a: Act
         <Button variant="secondary" onPress={downloadPlan}>
           Download plan
         </Button>
-        <RunButton source={source} plan={plan} hasLlmFix={hasLlmFix} isDisabled={previewStale || busy} dispatch={dispatch} />
+        <RunButton source={source} plan={plan} hasLlmFix={hasLlmFix} isApproved={approved} isDisabled={previewStale || busy} dispatch={dispatch} />
         {busy && <ProgressCircle aria-label="Updating preview" isIndeterminate size="S" />}
         <Text UNSAFE_style={{ opacity: 0.7 }}>
           Preview covers {preview.sampled_rows} sampled rows

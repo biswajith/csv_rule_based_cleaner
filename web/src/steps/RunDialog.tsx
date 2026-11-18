@@ -12,11 +12,12 @@ interface Props {
   source: SourceInfo;
   plan: Plan;
   hasLlmFix: boolean;
+  isApproved: boolean;
   isDisabled: boolean;
   dispatch: (a: Action) => void;
 }
 
-export function RunButton({ source, plan, hasLlmFix, isDisabled, dispatch }: Props) {
+export function RunButton({ source, plan, hasLlmFix, isApproved, isDisabled, dispatch }: Props) {
   const [stage, setStage] = useState<"closed" | "options" | "confirm">("closed");
   const [inPlace, setInPlace] = useState(false);
   const [noLlm, setNoLlm] = useState(false);
@@ -64,7 +65,7 @@ export function RunButton({ source, plan, hasLlmFix, isDisabled, dispatch }: Pro
     <>
       <Button
         variant="accent"
-        isDisabled={isDisabled}
+        isDisabled={isDisabled || !isApproved}
         onPress={() => {
           setError(null);
           setStage("options");
@@ -97,7 +98,7 @@ export function RunButton({ source, plan, hasLlmFix, isDisabled, dispatch }: Pro
                   </Switch>
                 )}
                 <ErrorBanner error={error} title="Could not start the run" />
-                {error?.status === 409 && (
+                {error?.status === 409 && !/approv/i.test(error.detail) && (
                   <Flex>
                     <Button variant="negative" isPending={busy} onPress={() => void start(options(true))}>
                       Overwrite and retry

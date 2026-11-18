@@ -51,6 +51,8 @@ const real = {
     request<PlanResult>("POST", "/api/plan", { source_id, rules }),
   preview: (source_id: string, plan: Plan) =>
     request<PreviewResult>("POST", "/api/preview", { source_id, plan }),
+  approvePlan: (plan: Plan, by: string) =>
+    request<{ plan: Plan }>("POST", "/api/plans/approve", { plan, by }),
   startRun: (source_id: string, plan: Plan, o: RunOptions) =>
     request<{ run_id: string }>("POST", "/api/runs", { source_id, plan, ...o }),
   run: (id: string) => request<RunStatus>("GET", `/api/runs/${encodeURIComponent(id)}`),
