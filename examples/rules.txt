@@ -1,0 +1,4 @@
+Replace all country names with the two letter country code.
+Evalute geographical data for accuracy and consistency. 
+Replace all state name with two letter acronyms.
+Flag invalid email domains, because they are not valid email addresses.
