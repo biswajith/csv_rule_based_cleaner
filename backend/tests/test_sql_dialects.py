@@ -184,3 +184,63 @@ def test_too_long_value_is_flagged_not_written(db, tmp_path):
                 run_dir=tmp_path / "r")
     assert rep.status == "done" and rep.cells_changed == 0 and rep.cells_flagged == 1
     assert read(engine, table)[0][1] == "abcdefghij"
+
+
+# ------------------------------------------------------------------ connection fields
+
+TRICKY = "p@ss/w:rd?#%"
+
+
+def test_fields_build_escaped_url_and_clear_secret_copies():
+    s = SQLSource(dialect="postgresql", host=" db.example ", port=6543, database="crm",
+                  username="me", password=TRICKY, table="t")
+    u = sa.engine.make_url(s.url)
+    assert (u.drivername, u.host, u.port, u.database, u.username, u.password) == (
+        "postgresql", "db.example", 6543, "crm", "me", TRICKY)
+    assert s.password is None and s.host is None and s.dialect is None
+
+
+def test_fields_optional_parts_and_validation():
+    s = SQLSource(dialect="mysql", host="h", database="d", username="", password="", table="t")
+    assert s.url == "mysql://h/d"
+    with pytest.raises(ValueError, match="missing: host, database"):
+        SQLSource(dialect="mysql", table="t")
+    with pytest.raises(ValueError, match="either url or"):
+        SQLSource(url="mysql://h/d", host="h", table="t")
+    with pytest.raises(ValueError):
+        SQLSource(dialect="oracle", host="h", database="d", table="t")
+
+
+def test_api_accepts_connection_fields(db, tmp_path):
+    """A user whose password needs escaping connects through the API's field form."""
+    from fastapi.testclient import TestClient
+
+    from scrubber.api import create_app
+
+    url, engine, table = db
+    make_table(engine, table)
+    u = sa.engine.make_url(url)
+    user = f"scrub_{uuid.uuid4().hex[:6]}"
+    mysql = engine.dialect.name == "mysql"
+    with engine.begin() as cx:
+        if mysql:
+            cx.exec_driver_sql(f"CREATE USER '{user}'@'%%' IDENTIFIED BY '{TRICKY.replace('%', '%%')}'")
+            cx.exec_driver_sql(f"GRANT ALL ON {u.database}.* TO '{user}'@'%%'")
+        else:
+            cx.exec_driver_sql(f"CREATE ROLE {user} LOGIN PASSWORD '{TRICKY.replace('%', '%%')}'")
+            cx.exec_driver_sql(f"GRANT SELECT ON {table} TO {user}")
+    try:
+        client = TestClient(create_app(port=8000), base_url="http://127.0.0.1:8000")
+        r = client.post("/api/sources", json={
+            "kind": "sql", "dialect": "mysql" if mysql else "postgresql", "host": u.host,
+            "port": u.port, "database": u.database, "username": user, "password": TRICKY,
+            "table": table})
+        assert r.status_code == 200, r.text
+        assert TRICKY not in r.text and r.json()["count"] == 4
+    finally:
+        with engine.begin() as cx:
+            if mysql:
+                cx.exec_driver_sql(f"DROP USER '{user}'@'%%'")
+            else:
+                cx.exec_driver_sql(f"REVOKE ALL ON {table} FROM {user}")
+                cx.exec_driver_sql(f"DROP ROLE {user}")

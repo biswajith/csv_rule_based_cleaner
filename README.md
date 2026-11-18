@@ -85,7 +85,8 @@ plan → preview → approve → apply in one go (it asks for your name and conf
 | Other SQL | any SQLAlchemy URL whose driver is installed (SQLite works out of the box) |
 | MongoDB | `mongodb://…  --db crm --collection leads` (`--filter '{"active": true}'`) |
 
-SQL tables need a single-column unique key (the primary key, or `--key-column`). The
+In the web UI the SQL tab is a connection form (database type, host, port, database, user,
+password); you can switch to pasting a URL. SQL tables need a single-column unique key (the primary key, or `--key-column`). The
 PostgreSQL (psycopg) and MySQL (PyMySQL) drivers are installed with the package; MySQL
 connections use `utf8mb4`.
 

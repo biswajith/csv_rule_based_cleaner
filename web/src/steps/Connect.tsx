@@ -1,7 +1,7 @@
 import { useState } from "react";
 import {
   Button, Content, DropZone, FileTrigger, Flex, Heading, IllustratedMessage, Item, Picker,
-  ProgressCircle, TabList, TabPanels, Tabs, Text, TextField, View, Well,
+  ProgressCircle, Switch, TabList, TabPanels, Tabs, Text, TextField, View, Well,
 } from "@adobe/react-spectrum";
 import Upload from "@spectrum-icons/workflow/UploadToCloud";
 import { api } from "../api";
@@ -18,6 +18,12 @@ const DELIMITERS: { key: string; label: string; value: string }[] = [
   { key: "pipe", label: "Pipe |", value: "|" },
 ];
 
+type Dialect = "postgresql" | "mysql";
+const DIALECTS: { key: Dialect; label: string; port: string; example: string }[] = [
+  { key: "postgresql", label: "PostgreSQL", port: "5432", example: "postgresql://user:password@host:5432/dbname" },
+  { key: "mysql", label: "MySQL / MariaDB", port: "3306", example: "mysql://user:password@host:3306/dbname" },
+];
+
 interface Props {
   state: AppState;
   dispatch: (a: Action) => void;
@@ -32,7 +38,14 @@ export function Connect({ state, dispatch }: Props) {
   const [delimiter, setDelimiter] = useState("comma");
   const [encoding, setEncoding] = useState("utf-8-sig");
   // SQL
+  const [sqlUseUrl, setSqlUseUrl] = useState(false);
   const [sqlUrl, setSqlUrl] = useState("");
+  const [dialect, setDialect] = useState<Dialect>("postgresql");
+  const [host, setHost] = useState("localhost");
+  const [port, setPort] = useState("5432");
+  const [sqlDatabase, setSqlDatabase] = useState("");
+  const [user, setUser] = useState("");
+  const [password, setPassword] = useState("");
   const [table, setTable] = useState("");
   const [schema, setSchema] = useState("");
   const [keyColumn, setKeyColumn] = useState("");
@@ -66,18 +79,37 @@ export function Connect({ state, dispatch }: Props) {
     connect(() =>
       api.addSource({
         kind: "sql",
-        url: sqlUrl,
-        table,
-        ...(schema.trim() ? { schema: schema.trim() } : {}),
+        // The server builds (and escapes) the URL from the separate fields.
+        ...(sqlUseUrl
+          ? { url: sqlUrl.trim() }
+          : {
+              dialect,
+              host: host.trim(),
+              ...(port.trim() ? { port: Number(port) } : {}),
+              database: sqlDatabase.trim(),
+              ...(user.trim() ? { username: user.trim() } : {}),
+              ...(password ? { password } : {}),
+            }),
+        table: table.trim(),
+        ...(schema.trim() && (sqlUseUrl || dialect === "postgresql") ? { schema: schema.trim() } : {}),
         ...(keyColumn.trim() ? { key_column: keyColumn.trim() } : {}),
       }),
     );
   const connectMongo = () =>
     connect(() => api.addSource({ kind: "mongo", uri: mongoUri, database, collection }));
 
+  const portOk = !port.trim() || (/^\d+$/.test(port.trim()) && Number(port) >= 1 && Number(port) <= 65535);
+  const sqlReady = sqlUseUrl ? !!sqlUrl.trim() : !!host.trim() && !!sqlDatabase.trim() && portOk;
+  const dialectInfo = DIALECTS.find((d) => d.key === dialect)!;
+  const pickDialect = (d: Dialect) => {
+    // keep a custom port; swap only the other database's default
+    if (port === dialectInfo.port || !port.trim()) setPort(DIALECTS.find((x) => x.key === d)!.port);
+    setDialect(d);
+  };
+
   const canConnect =
     !busy &&
-    (tab === "csv" ? !!file : tab === "sql" ? !!sqlUrl && !!table.trim() : !!mongoUri && !!database.trim() && !!collection.trim());
+    (tab === "csv" ? !!file : tab === "sql" ? sqlReady && !!table.trim() : !!mongoUri && !!database.trim() && !!collection.trim());
   const doConnect = tab === "csv" ? connectCsv : tab === "sql" ? connectSql : connectMongo;
 
   return (
@@ -135,18 +167,56 @@ export function Connect({ state, dispatch }: Props) {
           </Item>
           <Item key="sql">
             <Flex direction="column" gap="size-150" marginTop="size-150" maxWidth="size-6000">
-              <TextField
-                label="SQLAlchemy URL"
-                type="password"
-                autoComplete="off"
-                value={sqlUrl}
-                onChange={setSqlUrl}
-                description="Kept in server memory only; never displayed."
-                width="100%"
-              />
+              {sqlUseUrl ? (
+                <TextField
+                  label="Connection URL"
+                  type="password"
+                  autoComplete="off"
+                  value={sqlUrl}
+                  onChange={setSqlUrl}
+                  description={`For example ${DIALECTS[0].example} or ${DIALECTS[1].example}. Kept in server memory only; never displayed.`}
+                  width="100%"
+                />
+              ) : (
+                <>
+                  <Picker label="Database type" selectedKey={dialect} onSelectionChange={(k) => pickDialect(k as Dialect)}>
+                    {DIALECTS.map((d) => (
+                      <Item key={d.key}>{d.label}</Item>
+                    ))}
+                  </Picker>
+                  <Flex gap="size-150" wrap>
+                    <TextField label="Host" value={host} onChange={setHost} isRequired flex />
+                    <TextField
+                      label="Port"
+                      value={port}
+                      onChange={setPort}
+                      width="size-1200"
+                      validationState={portOk ? undefined : "invalid"}
+                    />
+                  </Flex>
+                  <TextField label="Database" value={sqlDatabase} onChange={setSqlDatabase} isRequired width="100%" />
+                  <Flex gap="size-150" wrap>
+                    <TextField label="User" value={user} onChange={setUser} autoComplete="off" flex />
+                    <TextField
+                      label="Password"
+                      type="password"
+                      value={password}
+                      onChange={setPassword}
+                      autoComplete="off"
+                      flex
+                      description="Kept in server memory only; never displayed."
+                    />
+                  </Flex>
+                </>
+              )}
+              <Switch isSelected={sqlUseUrl} onChange={setSqlUseUrl}>
+                Paste a connection URL instead
+              </Switch>
               <Flex gap="size-150" wrap>
                 <TextField label="Table" value={table} onChange={setTable} isRequired />
-                <TextField label="Schema (optional)" value={schema} onChange={setSchema} />
+                {(sqlUseUrl || dialect === "postgresql") && (
+                  <TextField label="Schema (optional)" value={schema} onChange={setSchema} />
+                )}
                 <TextField label="Key column (optional)" value={keyColumn} onChange={setKeyColumn} />
               </Flex>
               <Text UNSAFE_style={{ opacity: 0.7 }}>

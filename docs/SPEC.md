@@ -598,6 +598,12 @@ is set (then it is dropped and recreated). In-place needs an explicit flag (`--i
 
 ### 7.2 SQL — `{kind: "sql", url, table, schema=None, key_column=None}`
 
+- Instead of `url`, a source may give connection fields: `dialect` (`postgresql` |
+  `mysql`), `host`, `database`, optional `port`, `username`, `password`. The URL is built
+  with `URL.create` (user name and password escaped, so `@ / : ? # %` in a password are
+  safe); giving both `url` and fields is an error. After validation only `url` holds the
+  secret (the fields are cleared).
+
 - SQLAlchemy 2 Core with table reflection. Supported and tested: **PostgreSQL**
   (`psycopg` 3), **MySQL / MariaDB** (`PyMySQL`), SQLite; both drivers are dependencies.
   `normalize_url`: bare `postgresql://` and `postgres://` use `postgresql+psycopg`, bare
@@ -770,7 +776,7 @@ to the server once, kept only in server memory, and never returned.
 |---|---|---|
 | GET | `/api/config` | → `{model, has_api_key, sample_size, max_llm_cells, max_upload_mb}` |
 | POST | `/api/uploads` | multipart `file` (CSV) + optional `delimiter`, `encoding` → `SourceInfo` |
-| POST | `/api/sources` | `{kind:"sql", url, table, schema?, key_column?}` or `{kind:"mongo", uri, database, collection, filter?}` → `SourceInfo` |
+| POST | `/api/sources` | `{kind:"sql", url, table, schema?, key_column?}`, `{kind:"sql", dialect:"postgresql"\|"mysql", host, port?, database, username?, password?, table, schema?, key_column?}` or `{kind:"mongo", uri, database, collection, filter?}` → `SourceInfo` |
 | GET | `/api/sources/{source_id}/profile` | → `Profile` |
 | POST | `/api/plan` | `{source_id, rules: [str], columns?: [str]}` → `{plan, preview, usage}` |
 | POST | `/api/preview` | `{source_id, plan}` → `{plan, preview}` (no LLM; used after UI edits and "Load plan JSON"). `approval` is kept only while still valid; a stale one becomes `null` and `preview.warnings` gains `Approval by <by> was removed: the plan changed after it was approved.`, so `plan.approval != null` ⇔ approved. `plan` is the server-normalised plan (`Plan.model_dump(mode="json")`, every default filled in); the UI stores this, never the raw uploaded/edited JSON |
@@ -849,8 +855,11 @@ wrapped in `<Provider theme={defaultTheme}>` (light/dark follows the OS). State 
 one top-level reducer; a small typed `api.ts` wraps `fetch` and surfaces `{detail,
 errors}` in an inline error banner. No other UI/state libraries.
 
-1. **Connect** — Tabs: *CSV* (drop zone / file picker → upload), *SQL* (URL as a password
-   field, table, optional schema and key column), *MongoDB* (URI as a password field,
+1. **Connect** — Tabs: *CSV* (drop zone / file picker → upload), *SQL* (a connection
+   form: database type PostgreSQL or MySQL/MariaDB, host, port defaulting to 5432/3306,
+   database, user, password as a password field; a "Paste a connection URL instead"
+   switch shows a single URL password field with examples; then table, schema (PostgreSQL
+   or URL mode only) and key column), *MongoDB* (URI as a password field,
    database, collection). CSV delimiter is a picker: comma, semicolon, tab, pipe.
    "Connect" → `SourceInfo`; then the profile table (column, type,
    empty %, distinct, top shapes; non-cleanable columns greyed with a "read-only" badge).

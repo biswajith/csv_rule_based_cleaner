@@ -6,7 +6,7 @@ from abc import ABC, abstractmethod
 from pathlib import Path
 from typing import Annotated, Any, Iterator, Literal, Union
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 RowKey = Union[str, int]
 Record = dict[str, Any]
@@ -58,13 +58,45 @@ class CSVSource(BaseModel):
 
 
 class SQLSource(BaseModel):
+    """Either a full `url`, or the connection fields (`dialect`, `host`, `database`, optional
+    `port`/`username`/`password`) from which the URL is built — with user name and password
+    escaped, so characters like `@`, `/` or `:` in a password are safe. After validation
+    `url` is always set and the separate fields are cleared (one copy of the secret)."""
+
     model_config = ConfigDict(populate_by_name=True)
 
     kind: Literal["sql"] = "sql"
-    url: str
+    url: str | None = None
+    dialect: Literal["postgresql", "mysql"] | None = None
+    host: str | None = None
+    port: int | None = Field(default=None, ge=1, le=65535)
+    database: str | None = None
+    username: str | None = None
+    password: str | None = None
     table: str
     db_schema: str | None = Field(default=None, alias="schema")
     key_column: str | None = None
+
+    @model_validator(mode="after")
+    def _build_url(self) -> SQLSource:
+        parts = (self.dialect, self.host, self.port, self.database, self.username, self.password)
+        if self.url:
+            if any(p not in (None, "") for p in parts):
+                raise ValueError("give either url or the connection fields, not both")
+            return self
+        missing = [n for n, v in (("dialect", self.dialect), ("host", self.host),
+                                  ("database", self.database)) if not v]
+        if missing:
+            raise ValueError(f"url or connection fields required (missing: {', '.join(missing)})")
+        import sqlalchemy as sa
+
+        self.url = sa.engine.URL.create(
+            self.dialect, username=self.username or None, password=self.password or None,
+            host=self.host.strip(), port=self.port, database=self.database.strip(),
+        ).render_as_string(hide_password=False)
+        self.dialect = self.host = self.port = self.database = None
+        self.username = self.password = None
+        return self
 
 
 class MongoSource(BaseModel):
