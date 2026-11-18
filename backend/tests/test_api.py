@@ -49,8 +49,8 @@ def wait(c, run_id, timeout=10):
 
 def test_config(client, monkeypatch):
     j = client.get("/api/config").json()
-    assert set(j) == {"model", "has_api_key", "sample_size", "max_llm_cells", "max_upload_mb"}
-    assert j["model"] == "openai:gpt-5-mini" and j["sample_size"] == 1000
+    assert set(j) == {"model", "planner_model", "has_api_key", "sample_size", "max_llm_cells", "max_upload_mb"}
+    assert j["model"] == "openai:gpt-5-mini" and j["planner_model"] == "openai:gpt-6-luna" and j["sample_size"] == 1000
 
 
 def test_full_flow_csv(client):

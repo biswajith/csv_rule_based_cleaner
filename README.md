@@ -39,7 +39,7 @@ cp .env.example .env   # then set OPENAI_API_KEY
 ```
 
 The LLM is reached through LangChain (`LLM_MODEL=openai:gpt-5-mini` by default;
-`PLANNER_MODEL` can point the single planning call at a stronger model). Only OpenAI is
+the single planning call uses `PLANNER_MODEL=openai:gpt-6-luna`). Only OpenAI is
 installed today; another provider is a config change plus its `langchain-*` package.
 
 ## Web UI
@@ -80,8 +80,14 @@ plan → preview → approve → apply in one go (it asks for your name and conf
 | Source | Example |
 |---|---|
 | CSV | `data.csv` (`--delimiter`, `--encoding`) |
-| SQL (any SQLAlchemy URL) | `postgresql://…  --table leads` (needs a single-column unique key; `--key-column`) |
+| PostgreSQL | `postgresql://user@host/db  --table leads` (`--schema crm`) |
+| MySQL / MariaDB | `mysql://user@host/db  --table leads` |
+| Other SQL | any SQLAlchemy URL whose driver is installed (SQLite works out of the box) |
 | MongoDB | `mongodb://…  --db crm --collection leads` (`--filter '{"active": true}'`) |
+
+SQL tables need a single-column unique key (the primary key, or `--key-column`). The
+PostgreSQL (psycopg) and MySQL (PyMySQL) drivers are installed with the package; MySQL
+connections use `utf8mb4`.
 
 Pass `env:NAME` instead of a URL to read it from an environment variable (keeps
 passwords out of shell history). Useful run options: `--no-llm` (never call the LLM;
@@ -108,6 +114,13 @@ cd backend && ../.venv/bin/python -m pytest -q
 
 ```bash
 cd web && npm test && npm run build
+```
+
+The MySQL / PostgreSQL tests run against real servers when these point at an empty scratch
+database (otherwise they are skipped):
+
+```bash
+SCRUBBER_TEST_MYSQL_URL=mysql://root@127.0.0.1:3306/scrub_test SCRUBBER_TEST_POSTGRES_URL=postgresql://postgres@127.0.0.1:5432/scrub_test ../.venv/bin/python -m pytest -q tests/test_sql_dialects.py
 ```
 
 `npm run dev` (port 5173) proxies `/api` to a `scrubber serve` on port 8000; run the

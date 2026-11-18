@@ -21,6 +21,36 @@ from .base import (
 )
 
 
+# Bare dialect names map to the drivers this package installs (spec §7.2). An explicit
+# `dialect+driver://` URL is used as given.
+_DEFAULT_DRIVERS = {
+    "postgres": "postgresql+psycopg",  # Heroku-style scheme SQLAlchemy 2 rejects
+    "postgresql": "postgresql+psycopg",
+    "mysql": "mysql+pymysql",
+    "mariadb": "mariadb+pymysql",
+}
+
+
+def normalize_url(url: sa.engine.URL) -> sa.engine.URL:
+    """Pick the bundled driver for bare `postgresql://` / `mysql://` URLs and default MySQL /
+    MariaDB connections to utf8mb4 (the server's default charset may be latin1 or 3-byte utf8,
+    which corrupts or rejects non-ASCII text)."""
+    driver = _DEFAULT_DRIVERS.get(url.drivername)
+    if driver:
+        url = url.set(drivername=driver)
+    if url.get_backend_name() in ("mysql", "mariadb") and "charset" not in url.query:
+        url = url.update_query_dict({"charset": "utf8mb4"})
+    return url
+
+
+def _cleanable(t: sa.types.TypeEngine) -> bool:
+    """Free-text string columns only: VARCHAR/CHAR/TEXT and dialect variants. Enumerated types
+    (ENUM, MySQL SET) only accept fixed values, so they are read-only context."""
+    from sqlalchemy.dialects.mysql import SET
+
+    return isinstance(t, sa.String) and not isinstance(t, (sa.Enum, SET))
+
+
 def describe_url(url: sa.engine.URL, table: str) -> str:
     """`SQL <driver>://<host>[:port]/<database> / <table>`: never user, password or query."""
     port = f":{url.port}" if url.port else ""
@@ -32,14 +62,18 @@ class SQLConnector(Connector):
         self.spec = spec
         self._secret = ""
         try:
-            url = sa.engine.make_url(spec.url)
+            url = normalize_url(sa.engine.make_url(spec.url))
             self._secret = url.password or ""
             self.description = describe_url(url, spec.table)
-            self.engine = sa.create_engine(url)
+            self.engine = sa.create_engine(url, pool_pre_ping=True)
         except ArgumentError as e:
             # the message of ArgumentError may quote the URL: never forward it
             raise SourceError("invalid database URL") from e
-        except Exception as e:  # missing driver etc.
+        except ModuleNotFoundError as e:
+            raise SourceError(f"no database driver for {url.drivername!r} (missing Python "
+                              f"package {e.name!r}); install it, or use postgresql://, "
+                              "mysql:// or sqlite:// URLs") from e
+        except Exception as e:
             raise SourceError(self._clean(f"cannot create database engine: {e}")) from e
         try:
             self.table = sa.Table(spec.table, sa.MetaData(schema=spec.db_schema),
@@ -91,7 +125,7 @@ class SQLConnector(Connector):
         for c in self.table.columns:
             out.append(ColumnInfo(
                 name=c.name,
-                cleanable=isinstance(c.type, sa.String) and not isinstance(c.type, sa.Enum),
+                cleanable=_cleanable(c.type),
                 nullable=bool(c.nullable),
                 max_length=getattr(c.type, "length", None) if isinstance(c.type, sa.String) else None,
             ))

@@ -2,6 +2,7 @@
 
 export interface Config {
   model: string;
+  planner_model: string;
   has_api_key: boolean;
   sample_size: number;
   max_llm_cells: number;

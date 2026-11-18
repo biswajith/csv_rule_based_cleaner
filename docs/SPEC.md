@@ -598,7 +598,15 @@ is set (then it is dropped and recreated). In-place needs an explicit flag (`--i
 
 ### 7.2 SQL — `{kind: "sql", url, table, schema=None, key_column=None}`
 
-- SQLAlchemy 2 Core with table reflection. `description` =
+- SQLAlchemy 2 Core with table reflection. Supported and tested: **PostgreSQL**
+  (`psycopg` 3), **MySQL / MariaDB** (`PyMySQL`), SQLite; both drivers are dependencies.
+  `normalize_url`: bare `postgresql://` and `postgres://` use `postgresql+psycopg`, bare
+  `mysql://` / `mariadb://` use `+pymysql`; an explicit `dialect+driver://` is kept (a
+  missing driver package → `SourceError` naming it). MySQL/MariaDB connections default to
+  `charset=utf8mb4` unless the URL sets one. Engines use `pool_pre_ping`. `schema` is a
+  PostgreSQL schema, or another database on MySQL. In-place needs a transactional engine
+  (InnoDB) for the per-batch rollback guarantee.
+- `description` =
   `"SQL <driver>://<host>[:port]/<database> / <table>"` built from the URL's parts —
   never the username, password or query string (`hide_password` alone still leaked the
   user name and query parameters such as `?password=`).
@@ -611,7 +619,7 @@ is set (then it is dropped and recreated). In-place needs an explicit flag (`--i
 - `sample(n)`: first `n` rows by key (biased towards old rows; accepted for v1 and noted
   in the UI as "first N rows").
 - `cleanable` = column type is a `sqlalchemy.String` subclass but not `sqlalchemy.Enum`
-  (VARCHAR/CHAR/TEXT/…). `max_length` = the type's `length`. `nullable` from reflection.
+  or MySQL `SET` (VARCHAR/CHAR/TEXT/…; ENUM/SET, arrays, JSON, UUID are read-only). `max_length` = the type's `length`. `nullable` from reflection.
   Non-string columns are read-only context: they are profiled and may be read by
   `map_from_column`/`context_columns`, but cannot be planned (R4).
 - New-table writer: `<table>_cleaned` in the same schema, same column names/types and
@@ -672,7 +680,7 @@ class LLM(Protocol):
 
 - `init_chat_model(model, timeout=LLM_TIMEOUT, max_retries=LLM_MAX_RETRIES,
   **LLM_MODEL_KWARGS)` from `langchain.chat_models`; `model` is `"<provider>:<model>"`.
-  Default `LLM_MODEL=openai:gpt-5-mini`. `PLANNER_MODEL` (optional) overrides the model
+  Default `LLM_MODEL=openai:gpt-5-mini`; `PLANNER_MODEL` (default `openai:gpt-6-luna`) is the model
   for the planning call only (plan quality matters more than its cost; cell fixing is
   where the volume is). Only `langchain-openai` is a dependency.
 - `gpt-5-mini` is a reasoning model: **do not send `temperature`/`top_p`** (rejected by
@@ -892,7 +900,7 @@ returns a plain page saying to run `npm run build` and the API still works. In d
 |---|---|---|
 | `OPENAI_API_KEY` | – | required for `plan` and for `llm_fix` |
 | `LLM_MODEL` | `openai:gpt-5-mini` | `<provider>:<model>` |
-| `PLANNER_MODEL` | – | optional override for the planning call; owner wants a stronger model here ("Luna 6", exact `provider:model` ID pending) |
+| `PLANNER_MODEL` | `openai:gpt-6-luna` | model for the planning call (owner's choice, "Luna 6"); empty → `LLM_MODEL` |
 | `LLM_MODEL_KWARGS` | `{}` | JSON, passed to `init_chat_model` |
 | `LLM_TIMEOUT` | 180 | seconds per call |
 | `LLM_MAX_RETRIES` | 2 | provider-client retries |
@@ -911,7 +919,10 @@ returns a plain page saying to run `npm run build` and the API still works. In d
 
 ## 13. Testing
 
-No test touches the network. `pytest` only (no async plugin needed).
+No test touches the network by default. `pytest` only (no async plugin needed).
+`tests/test_sql_dialects.py` also runs against real MySQL and PostgreSQL servers when
+`SCRUBBER_TEST_MYSQL_URL` / `SCRUBBER_TEST_POSTGRES_URL` are set (verified with MySQL 8.4 and
+PostgreSQL 18); otherwise those tests are skipped.
 
 - `ops`: every op's table row in §4.2, incl. `None`, non-`str`, whitespace-only, partial
   vs full match, `translate` with `ignore_case`, `map_values` folding/collisions,
@@ -1040,5 +1051,5 @@ Changes made to the draft spec, each with the reason.
 4. SQL requires a single-column unique key in v1.
 5. A visible notice (README + UI Plan step) is enough for data sent to the provider.
 6. No duplicate op in v1.
-7. Planner model: owner chose "Luna 6" via `PLANNER_MODEL`; exact model ID to be confirmed. Code ships with `PLANNER_MODEL` unset (falls back to `LLM_MODEL`).
+7. Planner model: owner chose "Luna 6" = OpenAI `gpt-6-luna`; `PLANNER_MODEL` defaults to `openai:gpt-6-luna` (empty falls back to `LLM_MODEL`).
 8. **Plans need human approval (Phase 5).** A plan must be explicitly approved by a named person before any data is cleaned; plans start as drafts, approval is recorded in the plan (`approval`, bound to a hash of the plan content) and any later change voids it. Enforced at the CLI/API entry points, not in `clean` (§4.5).

@@ -139,8 +139,12 @@ def test_make_llm_picks_planner_model(monkeypatch):
     make_llm(planner=True)
     monkeypatch.delenv("PLANNER_MODEL")
     get_settings.cache_clear()
-    make_llm(planner=True)
-    assert seen == ["openai:a", "openai:b", "openai:a"]
+    make_llm(planner=True)  # default planner model
+    monkeypatch.setenv("PLANNER_MODEL", "")
+    get_settings.cache_clear()
+    make_llm(planner=True)  # empty: same model as the cleaner
+    get_settings.cache_clear()
+    assert seen == ["openai:a", "openai:b", "openai:gpt-6-luna", "openai:a"]
 
 
 def test_missing_api_key_surfaces_as_llm_error(monkeypatch):

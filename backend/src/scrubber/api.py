@@ -223,7 +223,7 @@ def create_app(*, port: int, allow_remote: bool = False, dev: bool | None = None
     @app.get("/api/config")
     def config() -> dict[str, Any]:
         s = get_settings()
-        return {"model": s.llm_model, "has_api_key": has_api_key(), "sample_size": s.sample_size,
+        return {"model": s.llm_model, "planner_model": s.planner_model or s.llm_model, "has_api_key": has_api_key(), "sample_size": s.sample_size,
                 "max_llm_cells": s.max_llm_cells, "max_upload_mb": s.max_upload_mb}
 
     @app.post("/api/uploads")

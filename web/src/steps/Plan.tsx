@@ -82,8 +82,8 @@ export function PlanStep({ state, dispatch }: { state: AppState; dispatch: (a: A
         <Heading>Data sent to the model provider</Heading>
         <Content>
           Generating a plan sends your rule text and sampled values from the profile to the model provider
-          {state.config ? ` (${state.config.model})` : ""}. Fixing cells with an LLM step later sends only the
-          triggered cell values and their context columns. Loading a plan JSON file sends nothing.
+          {state.config ? ` (${state.config.planner_model})` : ""}. Fixing cells with an LLM step later sends only the
+          triggered cell values and their context columns{state.config ? ` (${state.config.model})` : ""}. Loading a plan JSON file sends nothing.
         </Content>
       </InlineAlert>
       <Flex gap="size-150" alignItems="center" wrap>

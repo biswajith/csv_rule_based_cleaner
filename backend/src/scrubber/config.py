@@ -18,7 +18,8 @@ class Settings(BaseSettings):
 
     openai_api_key: str | None = None
     llm_model: str = "openai:gpt-5-mini"
-    planner_model: str | None = None
+    # The single planning call uses a stronger model ("Luna 6"); empty falls back to llm_model.
+    planner_model: str | None = "openai:gpt-6-luna"
     llm_model_kwargs: dict[str, Any] = {}
     llm_timeout: float = 180
     llm_max_retries: int = 2

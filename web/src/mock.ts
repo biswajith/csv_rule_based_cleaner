@@ -113,7 +113,7 @@ function report(status: "done" | "cancelled"): RunReport {
 }
 
 export const mock = {
-  config: async (): Promise<Config> => ({ model: "openai:mock", has_api_key: true, sample_size: 1000, max_llm_cells: 5000, max_upload_mb: 200 }),
+  config: async (): Promise<Config> => ({ model: "openai:mock", planner_model: "openai:mock-planner", has_api_key: true, sample_size: 1000, max_llm_cells: 5000, max_upload_mb: 200 }),
   upload: async (_f: File, _d: string, _e: string): Promise<SourceInfo> => (await delay(), source),
   addSource: async (_s: Record<string, unknown>): Promise<SourceInfo> => (await delay(), { ...source, kind: "sql", can_in_place: true, description: "sqlite:///mock.db table people" }),
   profile: async (_id: string): Promise<Profile> => (await delay(200), profile),
